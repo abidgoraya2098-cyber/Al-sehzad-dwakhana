@@ -22,59 +22,40 @@
     -webkit-overflow-scrolling: touch;
     scroll-behavior: smooth;
     -webkit-tap-highlight-color: transparent;
-    background-color: #f3f8f5;
-    color: #0f172a;
+    background-color: #f8faf9;
+    color: #0f172a; /* Deep dark slate for 100% crisp legibility */
   }
 }
 
-/* 🌿 Royal Herbal Emerald Background */
+/* 🌿 High-Contrast Clean Herbal Background */
 .bg-herbal-radial {
-  background-color: #f3f8f5;
+  background-color: #f8faf9;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(202, 138, 4, 0.15) 0%, transparent 45%),
-    radial-gradient(circle at 5% 30%, rgba(6, 78, 59, 0.08) 0%, transparent 35%),
-    radial-gradient(circle at 95% 70%, rgba(202, 138, 4, 0.12) 0%, transparent 40%),
-    radial-gradient(circle at 50% 100%, rgba(16, 185, 129, 0.1) 0%, transparent 50%),
-    radial-gradient(rgba(6, 78, 59, 0.04) 1px, transparent 1px);
-  background-size: 100% 100%, 100% 100%, 100% 100%, 100% 100%, 24px 24px;
+    radial-gradient(circle at 50% 0%, rgba(202, 138, 4, 0.12) 0%, transparent 45%),
+    radial-gradient(circle at 5% 30%, rgba(6, 78, 59, 0.06) 0%, transparent 35%),
+    radial-gradient(circle at 95% 70%, rgba(202, 138, 4, 0.1) 0%, transparent 40%),
+    radial-gradient(rgba(6, 78, 59, 0.03) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 24px 24px;
 }
 
-/* 👑 24K Royal Gold Gradient Text */
+/* 👑 High-Contrast 24K Royal Gold Gradient Text */
 .gold-gradient-text {
-  background: linear-gradient(135deg, #854d0e 0%, #ca8a04 25%, #eab308 50%, #fef08a 70%, #a16207 100%);
+  background: linear-gradient(135deg, #78350f 0%, #b45309 25%, #d97706 50%, #b45309 75%, #78350f 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
 
-.emerald-gradient-text {
-  background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #059669 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* 💎 Luxury Royal Botanical Cards */
+/* 💎 High-Contrast Sharp Cards */
 .gold-card {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.98) 0%, rgba(246, 253, 248, 0.98) 100%);
-  border: 1.5px solid rgba(202, 138, 4, 0.35);
-  box-shadow: 
-    0 15px 35px -8px rgba(6, 78, 59, 0.08),
-    0 0 15px rgba(234, 179, 8, 0.08);
+  background: #ffffff;
+  border: 2px solid rgba(202, 138, 4, 0.4);
+  box-shadow: 0 10px 30px -5px rgba(6, 78, 59, 0.08);
 }
 
 .gold-card:hover {
-  border-color: rgba(202, 138, 4, 0.7);
-  box-shadow: 
-    0 20px 45px -10px rgba(6, 78, 59, 0.16),
-    0 0 25px rgba(234, 179, 8, 0.18);
+  border-color: rgba(202, 138, 4, 0.85);
+  box-shadow: 0 15px 35px -5px rgba(6, 78, 59, 0.15);
   transform: translateY(-2px);
-}
-
-.glass-card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  box-shadow: 0 10px 25px -5px rgba(6, 78, 59, 0.05);
 }
 
 /* ✨ Gold Shimmer Animation */
@@ -84,7 +65,7 @@
 }
 
 .animate-shimmer {
-  background: linear-gradient(90deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.4) 50%, rgba(234, 179, 8, 0.1) 100%);
+  background: linear-gradient(90deg, rgba(234, 179, 8, 0.1) 0%, rgba(234, 179, 8, 0.5) 50%, rgba(234, 179, 8, 0.1) 100%);
   background-size: 200% 100%;
   animation: goldShimmer 3s infinite linear;
 }
@@ -92,10 +73,10 @@
 /* Pulse Glow for WhatsApp and Action Buttons */
 @keyframes pulseGlow {
   0%, 100% {
-    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.5);
+    box-shadow: 0 0 0 0 rgba(37, 211, 102, 0.6);
   }
   50% {
-    box-shadow: 0 0 0 14px rgba(37, 211, 102, 0);
+    box-shadow: 0 0 0 16px rgba(37, 211, 102, 0);
   }
 }
 
@@ -105,8 +86,8 @@
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
@@ -116,7 +97,7 @@
 ::-webkit-scrollbar-thumb {
   background: linear-gradient(180deg, #047857 0%, #ca8a04 100%);
   border-radius: 9999px;
-  border: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1.5px solid #ffffff;
 }
 
 ::-webkit-scrollbar-thumb:hover {

@@ -11,9 +11,13 @@ import {
   Sparkles,
   ShieldCheck,
   Lock,
-  HeartPulse
+  Calendar,
+  User,
+  Droplet,
+  Code
 } from 'lucide-react';
 import { DawakhanaLogo } from './DawakhanaLogo';
+import { ClinicStatusBadge } from './ClinicStatusBadge';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { useNotifications } from '../context/NotificationContext';
@@ -21,12 +25,14 @@ import { useAdmin } from '../context/AdminContext';
 
 interface HeaderProps {
   onOpenConsultation: () => void;
+  onOpenAppointment: () => void;
   onOpenAdminLogin: () => void;
   onOpenAdminInbox: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   onOpenConsultation,
+  onOpenAppointment,
   onOpenAdminLogin,
   onOpenAdminInbox,
 }) => {
@@ -45,7 +51,6 @@ export const Header: React.FC<HeaderProps> = ({
     };
     window.addEventListener('scroll', handleScroll);
 
-    // Check PWA ready
     const handlePwaReady = () => setCanInstallPwa(true);
     window.addEventListener('pwa-ready', handlePwaReady);
     if ((window as any).deferredPrompt || (window as any).deferredPwaPrompt) {
@@ -73,41 +78,42 @@ export const Header: React.FC<HeaderProps> = ({
 
   const navLinks = [
     { href: '#home', labelUr: 'ہوم', labelEn: 'Home' },
-    { href: '#products', labelUr: 'ادویات و مصنوعات', labelEn: 'Medicines' },
+    { href: '#hakeem-profile', labelUr: 'حکیم صاحب پروفائل', labelEn: 'Hakeem Profile' },
+    { href: '#hijama', labelUr: 'حجامہ سنٹر', labelEn: 'Hijama Therapy' },
+    { href: '#products', labelUr: 'دیسی ادویات', labelEn: 'Medicines' },
     { href: '#mizaj-quiz', labelUr: 'طبی مزاج ٹیسٹ', labelEn: 'Mizaj Quiz' },
-    { href: '#remedies', labelUr: 'دیسی ٹوٹکے', labelEn: 'Home Remedies' },
-    { href: '#estimator', labelUr: 'کورس تخمینہ', labelEn: 'Course Estimator' },
+    { href: '#remedies', labelUr: 'دیسی ٹوٹکے', labelEn: 'Remedies' },
+    { href: '#estimator', labelUr: 'کورس تخمینہ', labelEn: 'Estimator' },
     { href: '#reviews', labelUr: 'مریضوں کی رائے', labelEn: 'Reviews' },
-    { href: '#contact', labelUr: 'کلینک و رابطہ', labelEn: 'Contact' },
+    { href: '#developer', labelUr: 'ایپ ڈویلپر', labelEn: 'Developer' },
   ];
 
   return (
     <header
       className={`sticky top-0 z-40 transition-all duration-300 ${
         isScrolled
-          ? 'bg-white/95 backdrop-blur-md shadow-md border-b border-emerald-100 py-2.5'
-          : 'bg-white/80 backdrop-blur-sm border-b border-emerald-100/60 py-3.5'
+          ? 'bg-white/98 backdrop-blur-md shadow-md border-b border-emerald-200 py-2'
+          : 'bg-white/90 backdrop-blur-sm border-b border-emerald-100 py-3'
       }`}
     >
-      {/* Top Banner for Hotline & Timings */}
-      <div className="hidden lg:block bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 text-white text-xs py-1.5 px-4 -mt-3.5 mb-2.5">
+      {/* Top Banner with Real-time Clinic Status & Helpline */}
+      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white text-xs py-1.5 px-4 -mt-3 mb-2 hidden md:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-6">
-            <span className="flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-amber-400" />
-              {t('100% خالص قدرتی دیسی جڑی بوٹیاں اور مستند حکمت', '100% Pure Herbal & Authenticated Tibbi Formulations')}
-            </span>
+          <div className="flex items-center gap-4">
+            <ClinicStatusBadge />
             <span className="text-emerald-300">|</span>
-            <span>{t('اوقات: صبح 9 تا رات 10 بجے (ہفتہ وار تعطیل جمعہ)', 'Hours: 9:00 AM - 10:00 PM (Friday Closed)')}</span>
+            <span className="font-semibold text-emerald-100">
+              {t('کلینک اوقات: صبح 9 تا 1:30 بجے • شام 4:30 تا 10:30 بجے (جمعہ تعطیل)', 'Hours: 9:00 AM - 1:30 PM & 4:30 PM - 10:30 PM (Fri Closed)')}
+            </span>
           </div>
 
           <div className="flex items-center gap-4">
             <a
               href="tel:+923000000000"
-              className="flex items-center gap-1 text-amber-300 hover:text-amber-200 transition-colors font-medium"
+              className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 transition-colors font-extrabold bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/40"
             >
-              <Phone className="w-3 h-3" />
-              <span>{t('ہیلپ لائن: 0300-0000000', 'Helpline: +92 300 0000000')}</span>
+              <Phone className="w-3.5 h-3.5" />
+              <span>{t('لائیو کال: 0300-0000000', 'Live Call: +92 300 0000000')}</span>
             </a>
           </div>
         </div>
@@ -121,12 +127,12 @@ export const Header: React.FC<HeaderProps> = ({
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden lg:flex items-center gap-6">
+        <nav className="hidden xl:flex items-center gap-4.5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-slate-700 hover:text-emerald-700 font-medium text-sm transition-colors relative py-1 group"
+              className="text-slate-800 hover:text-emerald-800 font-bold text-xs sm:text-[13px] transition-colors relative py-1 group"
             >
               {isUrdu ? link.labelUr : link.labelEn}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full"></span>
@@ -135,38 +141,55 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Right Action Icons */}
-        <div className="flex items-center gap-2.5 sm:gap-3.5">
+        <div className="flex items-center gap-2 sm:gap-3">
+          {/* Direct Live Call Button */}
+          <a
+            href="tel:+923000000000"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500"
+            title={t('حکیم صاحب کو لائیو کال کریں', 'Direct Phone Call')}
+          >
+            <Phone className="w-3.5 h-3.5 fill-emerald-950" />
+            <span className="hidden sm:inline">{t('لائیو کال', 'Call Now')}</span>
+          </a>
+
+          {/* Appointment Booking Button */}
+          <button
+            onClick={onOpenAppointment}
+            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all border border-emerald-600"
+          >
+            <Calendar className="w-3.5 h-3.5 text-amber-300" />
+            <span>{t('وقت / ٹوکن لیں', 'Book Slot')}</span>
+          </button>
+
           {/* PWA Install Button */}
           {canInstallPwa && (
             <button
               onClick={handleInstallPwa}
-              className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-emerald-900 bg-amber-400 hover:bg-amber-300 rounded-full shadow-sm transition-all"
+              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 rounded-xl border border-emerald-300 transition-all"
               title={t('ایپ انسٹال کریں', 'Install App')}
             >
               <Download className="w-3.5 h-3.5" />
-              <span>{t('ایپ انسٹال کریں', 'Install App')}</span>
+              <span>{t('انسٹال', 'Install')}</span>
             </button>
           )}
 
           {/* Language Toggle */}
           <button
             onClick={() => setLanguage(language === 'ur' ? 'en' : 'ur')}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-emerald-200 text-xs font-bold text-emerald-800 hover:bg-emerald-50 transition-colors"
-            title={t('Switch to English', 'اردو میں دیکھیں')}
+            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors"
           >
-            <Languages className="w-3.5 h-3.5 text-emerald-600" />
+            <Languages className="w-3.5 h-3.5 text-emerald-700" />
             <span>{language === 'ur' ? 'English' : 'اردو'}</span>
           </button>
 
-          {/* Notification Trigger */}
+          {/* Notification Bell */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="relative p-2 rounded-lg text-slate-600 hover:text-emerald-700 hover:bg-emerald-50 transition-colors"
-            title={t('اعلانات و ٹپس', 'Notifications')}
+            className="relative p-2 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
           >
             <Bell className="w-5 h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 text-white text-[10px] font-bold rounded-full flex items-center justify-center animate-pulse">
+              <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-pulse">
                 {unreadCount}
               </span>
             )}
@@ -175,33 +198,22 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Cart Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative p-2 rounded-lg bg-emerald-700 text-white hover:bg-emerald-800 shadow-sm transition-all flex items-center gap-1.5 px-3"
-            title={t('شاپنگ کارٹ', 'View Cart')}
+            className="relative p-2 rounded-xl bg-emerald-800 text-white hover:bg-emerald-700 shadow-sm transition-all flex items-center gap-1.5 px-3"
           >
-            <ShoppingBag className="w-4 h-4" />
-            <span className="text-xs font-bold hidden sm:inline">{t('کارٹ', 'Cart')}</span>
+            <ShoppingBag className="w-4 h-4 text-amber-300" />
+            <span className="text-xs font-black hidden sm:inline">{t('کارٹ', 'Cart')}</span>
             {totalItems > 0 && (
-              <span className="bg-amber-400 text-emerald-950 text-[11px] font-extrabold px-1.5 py-0.2 rounded-full">
+              <span className="bg-amber-400 text-emerald-950 text-[11px] font-black px-1.5 py-0.2 rounded-full">
                 {totalItems}
               </span>
             )}
-          </button>
-
-          {/* Consultation CTA button */}
-          <button
-            onClick={onOpenConsultation}
-            className="hidden md:flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-emerald-800 to-teal-700 text-white text-xs font-bold rounded-xl shadow-md hover:shadow-lg hover:from-emerald-700 hover:to-teal-600 transition-all border border-amber-400/50"
-          >
-            <Stethoscope className="w-4 h-4 text-amber-400" />
-            <span>{t('حکیم صاحب سے مشورہ', 'Consult Hakeem')}</span>
           </button>
 
           {/* Admin Portal Button */}
           {isAdminLoggedIn ? (
             <button
               onClick={onOpenAdminInbox}
-              className="p-2 rounded-lg bg-amber-100 text-amber-900 hover:bg-amber-200 transition-colors text-xs font-bold flex items-center gap-1"
-              title="Admin Inbox"
+              className="p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300"
             >
               <ShieldCheck className="w-4 h-4 text-amber-700" />
               <span className="hidden sm:inline">Admin</span>
@@ -209,8 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onOpenAdminLogin}
-              className="p-2 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition-colors"
-              title="Admin Login"
+              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 transition-colors"
             >
               <Lock className="w-4 h-4" />
             </button>
@@ -219,8 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="lg:hidden p-2 rounded-lg text-slate-700 hover:bg-emerald-50 transition-colors"
-            aria-label="Toggle menu"
+            className="xl:hidden p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -229,14 +239,25 @@ export const Header: React.FC<HeaderProps> = ({
 
       {/* Mobile Drawer Menu */}
       {mobileMenuOpen && (
-        <div className="lg:hidden bg-white border-b border-emerald-100 px-4 pt-3 pb-5 space-y-3 shadow-xl animate-fadeIn">
-          <div className="grid grid-cols-1 gap-2 pt-2">
+        <div className="xl:hidden bg-white border-b-2 border-emerald-600 px-4 pt-3 pb-5 space-y-3 shadow-2xl animate-fadeIn">
+          <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
+            <ClinicStatusBadge />
+            <a
+              href="tel:+923000000000"
+              className="flex items-center gap-1 px-3 py-1 bg-amber-400 text-emerald-950 text-xs font-black rounded-lg shadow-xs"
+            >
+              <Phone className="w-3.5 h-3.5 fill-emerald-950" />
+              <span>0300-0000000</span>
+            </a>
+          </div>
+
+          <div className="grid grid-cols-1 gap-1.5 pt-1">
             {navLinks.map((link) => (
               <a
                 key={link.href}
                 href={link.href}
                 onClick={() => setMobileMenuOpen(false)}
-                className="px-3 py-2 rounded-lg text-slate-700 hover:bg-emerald-50 hover:text-emerald-800 font-medium text-sm flex items-center justify-between"
+                className="px-3 py-2 rounded-xl text-slate-800 hover:bg-emerald-50 hover:text-emerald-900 font-bold text-sm flex items-center justify-between"
               >
                 <span>{isUrdu ? link.labelUr : link.labelEn}</span>
                 <span className="text-xs text-emerald-600">→</span>
@@ -244,30 +265,28 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </div>
 
-          <div className="pt-3 border-t border-emerald-100 flex flex-col gap-2">
+          <div className="pt-3 border-t border-slate-100 flex flex-col gap-2">
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onOpenAppointment();
+              }}
+              className="w-full py-2.5 bg-emerald-800 text-white font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-md"
+            >
+              <Calendar className="w-4 h-4 text-amber-400" />
+              <span>{t('معائنہ کا وقت / ٹوکن لیں', 'Book Appointment Time')}</span>
+            </button>
+
             <button
               onClick={() => {
                 setMobileMenuOpen(false);
                 onOpenConsultation();
               }}
-              className="w-full py-2.5 bg-gradient-to-r from-emerald-800 to-teal-700 text-white font-bold text-sm rounded-xl flex items-center justify-center gap-2 shadow-md"
+              className="w-full py-2.5 bg-amber-400 text-emerald-950 font-black text-xs rounded-xl flex items-center justify-center gap-2 shadow-md"
             >
-              <Stethoscope className="w-4 h-4 text-amber-400" />
-              <span>{t('حکیم صاحب سے آن لائن مشورہ حاصل کریں', 'Book Online Hakeem Consultation')}</span>
+              <Stethoscope className="w-4 h-4" />
+              <span>{t('حکیم صاحب کو نسخہ / رپورٹ بھیجیں', 'Upload Report / Consultation')}</span>
             </button>
-
-            {canInstallPwa && (
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleInstallPwa();
-                }}
-                className="w-full py-2 bg-amber-400 text-emerald-950 font-bold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm"
-              >
-                <Download className="w-4 h-4" />
-                <span>{t('ایپ ڈاؤن لوڈ و انسٹال کریں', 'Download & Install PWA App')}</span>
-              </button>
-            )}
           </div>
         </div>
       )}
