@@ -3,8 +3,7 @@ import { ConsultationSubmission, HakeemSettings } from '../types';
 
 interface AdminContextType {
   isAdminLoggedIn: boolean;
-  adminEmail: string;
-  loginAdmin: (email: string, pass: string) => boolean;
+  loginAdmin: (pass: string) => boolean;
   logoutAdmin: () => void;
   updateAdminPassword: (newPass: string) => boolean;
   hakeemSettings: HakeemSettings;
@@ -14,8 +13,6 @@ interface AdminContextType {
   updateConsultationStatus: (id: string, status: 'new' | 'in_progress' | 'completed') => void;
   deleteConsultation: (id: string) => void;
 }
-
-const AUTHORIZED_EMAIL = 'abidgoraya2098@gmail.com';
 
 const defaultHakeemSettings: HakeemSettings = {
   nameUr: 'حکیم محمد نواز احمد',
@@ -44,7 +41,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   const [adminPassword, setAdminPassword] = useState<string>(() => {
-    return localStorage.getItem('dawakhana_admin_pass') || 'admin123';
+    return localStorage.getItem('dawakhana_admin_pass') || '5225';
   });
 
   const [hakeemSettings, setHakeemSettings] = useState<HakeemSettings>(() => {
@@ -76,13 +73,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     localStorage.setItem('dawakhana_consultations', JSON.stringify(consultations));
   }, [consultations]);
 
-  const loginAdmin = (email: string, pass: string): boolean => {
-    const isEmailValid =
-      email.trim().toLowerCase() === AUTHORIZED_EMAIL.toLowerCase() ||
-      email.trim().toLowerCase() === hakeemSettings.email.toLowerCase();
-
-    // Valid if matches custom password or default master admin credentials
-    if (isEmailValid && (pass === adminPassword || pass === 'admin123' || pass === '123456')) {
+  const loginAdmin = (pass: string): boolean => {
+    // Verified with password '5225' or updated password
+    if (pass.trim() === adminPassword || pass.trim() === '5225') {
       setIsAdminLoggedIn(true);
       localStorage.setItem('dawakhana_admin_auth', 'true');
       return true;
@@ -96,9 +89,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const updateAdminPassword = (newPass: string): boolean => {
-    if (newPass.length >= 4) {
-      setAdminPassword(newPass);
-      localStorage.setItem('dawakhana_admin_pass', newPass);
+    if (newPass.trim().length >= 4) {
+      setAdminPassword(newPass.trim());
+      localStorage.setItem('dawakhana_admin_pass', newPass.trim());
       return true;
     }
     return false;
@@ -136,7 +129,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     <AdminContext.Provider
       value={{
         isAdminLoggedIn,
-        adminEmail: AUTHORIZED_EMAIL,
         loginAdmin,
         logoutAdmin,
         updateAdminPassword,

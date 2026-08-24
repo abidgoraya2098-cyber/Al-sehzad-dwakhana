@@ -132,7 +132,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                 {t('ایڈمن پورٹل و کلینک کنٹرول پینل', 'Admin & Clinic Management Portal')}
               </h2>
               <span className="text-[11px] text-amber-300 font-mono">
-                {adminEmail} ({consultations.length} {t('کیسز', 'cases')})
+                {t('مستند ایڈمن ایکسس', 'Authorized Access')} • {consultations.length} {t('کیسز', 'cases')}
               </span>
             </div>
           </div>
