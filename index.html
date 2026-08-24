@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ur" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    <title>الشہزاد دواخانہ اینڈ ہربل کلینک | Al-Shehzad Dawakhana & Herbal Clinic</title>
+    
+    <!-- Meta Descriptions & SEO -->
+    <meta name="description" content="الشہزاد دواخانہ اینڈ ہربل کلینک — قدرتی جڑی بوٹیوں سے علاج، خالص ادویات، معجون، عرقیات، کشتہ جات اور آن لائن حکیم صاحب سے مفت طبی مشورہ۔" />
+    <meta name="keywords" content="Al Shehzad Dawakhana, الشہزاد دواخانہ, Tibb-e-Unani, Herbal Medicine, Hakeem Consultation, Desi Ilaj, Majoon, Arqiat, Pakistan Herbal Clinic" />
+    <meta name="author" content="Abid Abbas Ali Goraya (abidgoraya2098@gmail.com)" />
+    <meta name="developer" content="Abid Abbas Ali Goraya (عابد عباس علی گورائیہ)" />
+    <meta name="copyright" content="© 2026 Al-Shehzad Dawakhana. All Rights Reserved." />
+    <meta name="format-detection" content="telephone=no" />
+
+    <!-- Open Graph & Social Sharing -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="الشہزاد دواخانہ اینڈ ہربل کلینک | Al-Shehzad Dawakhana" />
+    <meta property="og:description" content="قدرتی جڑی بوٹیوں سے 100 فیصد خالص علاج، مستند حکمت اور آن لائن آرڈر و کنسلٹیشن سروس۔" />
+    <meta property="og:image" content="/logo.png" />
+    <meta property="og:url" content="https://al-sehzad-dwakhana.vercel.app" />
+
+    <!-- PWA Web App Manifest -->
+    <link rel="manifest" href="/manifest.json" />
+
+    <!-- Mobile & PWA Meta Tags -->
+    <meta name="theme-color" content="#064e3b" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="الشہزاد دواخانہ" />
+    <meta name="application-name" content="Al-Shehzad Dawakhana" />
+    <meta name="msapplication-TileColor" content="#064e3b" />
+    <meta name="msapplication-TileImage" content="/icon-192.png" />
+
+    <!-- Favicon & Touch Icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+
+    <!-- Google Fonts: Noto Sans Arabic, Amiri & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Google Chrome PWA Event Capture & Instant Service Worker Auto-Update -->
+    <script>
+      window.deferredPrompt = null;
+      window.deferredPwaPrompt = null;
+
+      window.addEventListener("beforeinstallprompt", function(e) {
+        e.preventDefault();
+        window.deferredPrompt = e;
+        window.deferredPwaPrompt = e;
+        console.log("[PWA] Al-Shehzad Dawakhana install prompt ready");
+        window.dispatchEvent(new CustomEvent("pwa-ready"));
+      });
+
+      window.addEventListener("appinstalled", function() {
+        console.log("[PWA] Al-Shehzad Dawakhana installed successfully!");
+        window.deferredPrompt = null;
+        window.deferredPwaPrompt = null;
+        window.dispatchEvent(new CustomEvent("pwa-installed"));
+      });
+
+      // Register and Auto-Update Service Worker
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function() {
+          navigator.serviceWorker
+            .register("/sw.js", { scope: "/" })
+            .then(function(registration) {
+              registration.update();
+              console.log("[PWA] Service Worker active:", registration.scope);
+            })
+            .catch(function(error) {
+              console.warn("[PWA] Service Worker registration:", error);
+            });
+        });
+      }
+    </script>
+  </head>
+  <body class="bg-[#f4f9f5] text-slate-900 antialiased selection:bg-emerald-600 selection:text-white">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
