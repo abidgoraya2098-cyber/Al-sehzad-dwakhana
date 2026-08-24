@@ -17,16 +17,18 @@ import {
 import { DawakhanaLogo } from './DawakhanaLogo';
 import { ClinicStatusBadge } from './ClinicStatusBadge';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 
 export const ClinicFooter: React.FC = () => {
   const { isUrdu, t } = useLanguage();
+  const { hakeemSettings } = useAdmin();
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
-    <footer id="contact" className="bg-[#021f16] text-white pt-14 pb-8 border-t-4 border-amber-400">
+    <footer id="contact" className="bg-[#021f16] text-white pt-14 pb-8 border-t-4 border-amber-400 w-full overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
         {/* Main 4 Columns Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -35,8 +37,8 @@ export const ClinicFooter: React.FC = () => {
             <DawakhanaLogo size={52} />
             <p className="text-xs text-emerald-200 leading-relaxed font-medium">
               {t(
-                'الشہزاد دواخانہ اینڈ ہربل کلینک — 30 سالہ خاندانی روایت کے تحت خالص قدرتی دیسی جڑی بوٹیوں سے تیار کردہ اکسیر ادویات، حجامہ تھراپی اور آن لائن طبی رہنمائی۔',
-                'Al-Shehzad Dawakhana & Herbal Clinic — 30+ years of heritage delivering authenticated Unani formulations, Hijama therapy, and online herbal consultations.'
+                `الشہزاد دواخانہ اینڈ ہربل کلینک — ${hakeemSettings.experienceYears} سالہ خاندانی روایت کے تحت خالص قدرتی دیسی جڑی بوٹیوں سے تیار کردہ اکسیر ادویات، حجامہ تھراپی اور آن لائن طبی رہنمائی۔`,
+                `Al-Shehzad Dawakhana & Herbal Clinic — ${hakeemSettings.experienceYears} years of heritage delivering authenticated Unani formulations, Hijama therapy, and online herbal consultations under ${hakeemSettings.nameEn}.`
               )}
             </p>
             <ClinicStatusBadge />
@@ -51,7 +53,7 @@ export const ClinicFooter: React.FC = () => {
               <li>
                 <a href="#hakeem-profile" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{t('حکیم صاحب کی مکمل پروفائل', 'Chief Hakeem Profile')}</span>
+                  <span>{isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}</span>
                 </a>
               </li>
               <li>
@@ -93,16 +95,8 @@ export const ClinicFooter: React.FC = () => {
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-white block">{t('صبح شفٹ:', 'Morning Shift:')}</span>
-                  <span>{t('صبح 09:00 تا دوپہر 01:30 بجے', '09:00 AM - 01:30 PM')}</span>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-2 pt-2 border-t border-emerald-900">
-                <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <span className="font-bold text-white block">{t('شام شفٹ:', 'Evening Shift:')}</span>
-                  <span>{t('شام 04:30 تا رات 10:30 بجے', '04:30 PM - 10:30 PM')}</span>
+                  <span className="font-bold text-white block">{t('صبح و شام اوقات:', 'Clinic Shift Timings:')}</span>
+                  <span>{isUrdu ? hakeemSettings.clinicTimingsUr : hakeemSettings.clinicTimingsEn}</span>
                 </div>
               </div>
 
@@ -110,7 +104,7 @@ export const ClinicFooter: React.FC = () => {
                 <Clock className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-red-300 block">{t('جمعۃ المبارک:', 'Friday:')}</span>
-                  <span>{t('ہفتہ وار تعطیل (آن لائن ایمرجنسی دستیاب)', 'Weekly Holiday (Online available)')}</span>
+                  <span>{t('ہفتہ وار تعطیل (آن لائن ایمرجنسی دستیاب)', 'Weekly Holiday (Online emergency available)')}</span>
                 </div>
               </div>
             </div>
@@ -125,34 +119,34 @@ export const ClinicFooter: React.FC = () => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>
-                  {t('الشہزاد دواخانہ اینڈ ہربل کلینک، مین جی ٹی روڈ، گوجرانوالہ، پنجاب، پاکستان', 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan')}
+                  {isUrdu ? hakeemSettings.addressUr : hakeemSettings.addressEn}
                 </span>
               </div>
 
               <a
-                href="tel:+923000000000"
+                href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
                 className="flex items-center gap-2 text-amber-300 hover:text-amber-200 transition-colors font-black bg-emerald-900/80 p-2 rounded-xl border border-emerald-700"
               >
                 <Phone className="w-4 h-4 text-amber-400" />
-                <span>{t('ڈائریکٹ فون: 0300-0000000', 'Phone: +92 300 0000000')}</span>
+                <span>{t(`ڈائریکٹ فون: ${hakeemSettings.phone}`, `Phone: ${hakeemSettings.phone}`)}</span>
               </a>
 
               <a
-                href="https://wa.me/923000000000"
+                href={`https://wa.me/${hakeemSettings.whatsapp}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-emerald-300 hover:text-white transition-colors"
               >
                 <MessageSquare className="w-4 h-4 text-[#25D366]" />
-                <span>{t('واٹس ایپ: 0300-0000000', 'WhatsApp: +92 300 0000000')}</span>
+                <span>{t(`واٹس ایپ: ${hakeemSettings.phone}`, `WhatsApp: ${hakeemSettings.phone}`)}</span>
               </a>
 
               <a
-                href="mailto:abidgoraya2098@gmail.com"
-                className="flex items-center gap-2 hover:text-white transition-colors"
+                href={`mailto:${hakeemSettings.email}`}
+                className="flex items-center gap-2 hover:text-white transition-colors break-all"
               >
-                <Mail className="w-4 h-4 text-amber-400" />
-                <span>abidgoraya2098@gmail.com</span>
+                <Mail className="w-4 h-4 text-amber-400 shrink-0" />
+                <span>{hakeemSettings.email}</span>
               </a>
             </div>
           </div>

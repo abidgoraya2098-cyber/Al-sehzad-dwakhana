@@ -39,7 +39,7 @@ export const Header: React.FC<HeaderProps> = ({
   const { language, setLanguage, isUrdu, t } = useLanguage();
   const { totalItems, setIsCartOpen } = useCart();
   const { unreadCount, setIsModalOpen } = useNotifications();
-  const { isAdminLoggedIn } = useAdmin();
+  const { isAdminLoggedIn, hakeemSettings } = useAdmin();
 
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,10 +78,10 @@ export const Header: React.FC<HeaderProps> = ({
 
   const navLinks = [
     { href: '#home', labelUr: 'ہوم', labelEn: 'Home' },
-    { href: '#hakeem-profile', labelUr: 'حکیم صاحب پروفائل', labelEn: 'Hakeem Profile' },
-    { href: '#hijama', labelUr: 'حجامہ سنٹر', labelEn: 'Hijama Therapy' },
+    { href: '#hakeem-profile', labelUr: 'حکیم صاحب', labelEn: 'Hakeem' },
+    { href: '#hijama', labelUr: 'حجامہ سنٹر', labelEn: 'Hijama' },
     { href: '#products', labelUr: 'دیسی ادویات', labelEn: 'Medicines' },
-    { href: '#mizaj-quiz', labelUr: 'طبی مزاج ٹیسٹ', labelEn: 'Mizaj Quiz' },
+    { href: '#mizaj-quiz', labelUr: 'مزاج ٹیسٹ', labelEn: 'Mizaj' },
     { href: '#remedies', labelUr: 'دیسی ٹوٹکے', labelEn: 'Remedies' },
     { href: '#estimator', labelUr: 'کورس تخمینہ', labelEn: 'Estimator' },
     { href: '#reviews', labelUr: 'مریضوں کی رائے', labelEn: 'Reviews' },
@@ -90,49 +90,49 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
-      className={`sticky top-0 z-40 transition-all duration-300 ${
+      className={`sticky top-0 z-40 transition-all duration-300 w-full ${
         isScrolled
-          ? 'bg-white/98 backdrop-blur-md shadow-md border-b border-emerald-200 py-2'
-          : 'bg-white/90 backdrop-blur-sm border-b border-emerald-100 py-3'
+          ? 'bg-white/98 backdrop-blur-md shadow-md border-b border-emerald-200 py-1.5'
+          : 'bg-white/90 backdrop-blur-sm border-b border-emerald-100 py-2.5'
       }`}
     >
       {/* Top Banner with Real-time Clinic Status & Helpline */}
-      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white text-xs py-1.5 px-4 -mt-3 mb-2 hidden md:block">
+      <div className="bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white text-xs py-1.5 px-4 -mt-2.5 mb-2 hidden md:block">
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <div className="flex items-center gap-4">
             <ClinicStatusBadge />
             <span className="text-emerald-300">|</span>
             <span className="font-semibold text-emerald-100">
-              {t('کلینک اوقات: صبح 9 تا 1:30 بجے • شام 4:30 تا 10:30 بجے (جمعہ تعطیل)', 'Hours: 9:00 AM - 1:30 PM & 4:30 PM - 10:30 PM (Fri Closed)')}
+              {isUrdu ? hakeemSettings.clinicTimingsUr : hakeemSettings.clinicTimingsEn}
             </span>
           </div>
 
           <div className="flex items-center gap-4">
             <a
-              href="tel:+923000000000"
+              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
               className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 transition-colors font-extrabold bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/40"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span>{t('لائیو کال: 0300-0000000', 'Live Call: +92 300 0000000')}</span>
+              <span>{t(`لائیو کال: ${hakeemSettings.phone}`, `Call: ${hakeemSettings.phone}`)}</span>
             </a>
           </div>
         </div>
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 flex items-center justify-between">
         {/* Brand Logo */}
-        <a href="#home" className="flex items-center">
-          <DawakhanaLogo size={46} />
+        <a href="#home" className="flex items-center shrink-0">
+          <DawakhanaLogo size={42} />
         </a>
 
         {/* Desktop Nav Links */}
-        <nav className="hidden xl:flex items-center gap-4.5">
+        <nav className="hidden xl:flex items-center gap-3.5 2xl:gap-5">
           {navLinks.map((link) => (
             <a
               key={link.href}
               href={link.href}
-              className="text-slate-800 hover:text-emerald-800 font-bold text-xs sm:text-[13px] transition-colors relative py-1 group"
+              className="text-slate-800 hover:text-emerald-800 font-bold text-xs sm:text-[13px] transition-colors relative py-1 group whitespace-nowrap"
             >
               {isUrdu ? link.labelUr : link.labelEn}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-amber-500 transition-all duration-300 group-hover:w-full"></span>
@@ -141,24 +141,24 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Right Action Icons */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Direct Live Call Button */}
           <a
-            href="tel:+923000000000"
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500"
+            href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500"
             title={t('حکیم صاحب کو لائیو کال کریں', 'Direct Phone Call')}
           >
             <Phone className="w-3.5 h-3.5 fill-emerald-950" />
-            <span className="hidden sm:inline">{t('لائیو کال', 'Call Now')}</span>
+            <span className="hidden sm:inline">{t('لائیو کال', 'Call')}</span>
           </a>
 
           {/* Appointment Booking Button */}
           <button
             onClick={onOpenAppointment}
-            className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all border border-emerald-600"
+            className="hidden sm:flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all border border-emerald-600"
           >
             <Calendar className="w-3.5 h-3.5 text-amber-300" />
-            <span>{t('وقت / ٹوکن لیں', 'Book Slot')}</span>
+            <span>{t('وقت لیں', 'Book Slot')}</span>
           </button>
 
           {/* PWA Install Button */}
@@ -176,20 +176,20 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Language Toggle */}
           <button
             onClick={() => setLanguage(language === 'ur' ? 'en' : 'ur')}
-            className="flex items-center gap-1 px-2.5 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-1 px-2 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors"
           >
             <Languages className="w-3.5 h-3.5 text-emerald-700" />
-            <span>{language === 'ur' ? 'English' : 'اردو'}</span>
+            <span>{language === 'ur' ? 'EN' : 'اردو'}</span>
           </button>
 
           {/* Notification Bell */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="relative p-2 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
+            className="relative p-1.5 sm:p-2 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
           >
-            <Bell className="w-5 h-5" />
+            <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             {unreadCount > 0 && (
-              <span className="absolute top-1 right-1 w-4 h-4 bg-amber-500 text-white text-[10px] font-black rounded-full flex items-center justify-center animate-pulse">
+              <span className="absolute top-0.5 right-0.5 w-3.5 h-3.5 bg-amber-500 text-white text-[9px] font-black rounded-full flex items-center justify-center animate-pulse">
                 {unreadCount}
               </span>
             )}
@@ -198,12 +198,12 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Cart Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative p-2 rounded-xl bg-emerald-800 text-white hover:bg-emerald-700 shadow-sm transition-all flex items-center gap-1.5 px-3"
+            className="relative p-1.5 sm:p-2 rounded-xl bg-emerald-800 text-white hover:bg-emerald-700 shadow-sm transition-all flex items-center gap-1 px-2.5 sm:px-3"
           >
             <ShoppingBag className="w-4 h-4 text-amber-300" />
-            <span className="text-xs font-black hidden sm:inline">{t('کارٹ', 'Cart')}</span>
+            <span className="text-xs font-black hidden md:inline">{t('کارٹ', 'Cart')}</span>
             {totalItems > 0 && (
-              <span className="bg-amber-400 text-emerald-950 text-[11px] font-black px-1.5 py-0.2 rounded-full">
+              <span className="bg-amber-400 text-emerald-950 text-[10px] font-black px-1.5 py-0.2 rounded-full">
                 {totalItems}
               </span>
             )}
@@ -213,7 +213,7 @@ export const Header: React.FC<HeaderProps> = ({
           {isAdminLoggedIn ? (
             <button
               onClick={onOpenAdminInbox}
-              className="p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300"
+              className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300"
             >
               <ShieldCheck className="w-4 h-4 text-amber-700" />
               <span className="hidden sm:inline">Admin</span>
@@ -221,7 +221,7 @@ export const Header: React.FC<HeaderProps> = ({
           ) : (
             <button
               onClick={onOpenAdminLogin}
-              className="p-2 rounded-xl text-slate-400 hover:text-slate-700 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-700 transition-colors"
             >
               <Lock className="w-4 h-4" />
             </button>
@@ -230,7 +230,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
+            className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
           >
             {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
@@ -243,11 +243,11 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
             <ClinicStatusBadge />
             <a
-              href="tel:+923000000000"
+              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
               className="flex items-center gap-1 px-3 py-1 bg-amber-400 text-emerald-950 text-xs font-black rounded-lg shadow-xs"
             >
               <Phone className="w-3.5 h-3.5 fill-emerald-950" />
-              <span>0300-0000000</span>
+              <span>{hakeemSettings.phone}</span>
             </a>
           </div>
 

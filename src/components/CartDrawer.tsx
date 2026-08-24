@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -26,6 +27,7 @@ export const CartDrawer: React.FC = () => {
   } = useCart();
 
   const { isUrdu, t } = useLanguage();
+  const { hakeemSettings } = useAdmin();
 
   const [customerName, setCustomerName] = useState('');
   const [customerPhone, setCustomerPhone] = useState('');
@@ -49,7 +51,7 @@ export const CartDrawer: React.FC = () => {
       .join('\n');
 
     const msg = encodeURIComponent(
-      `🌿 *الشہزاد دواخانہ اینڈ ہربل کلینک — نیا آرڈر آرڈر انوائس* 🌿\n` +
+      `🌿 *الشہزاد دواخانہ اینڈ ہربل کلینک — نیا آرڈر انوائس* 🌿\n` +
       `-----------------------------------------\n` +
       `👤 *مریض / گاہک کا نام:* ${customerName || 'معزز گاہک'}\n` +
       `📞 *فون نمبر:* ${customerPhone || 'فراہم نہیں کیا گیا'}\n` +
@@ -62,10 +64,10 @@ export const CartDrawer: React.FC = () => {
       `🚚 *ڈلیوری چارجز:* ${deliveryCharges === 0 ? 'مفت (Free)' : `Rs. ${deliveryCharges}`}\n` +
       `💰 *کل رقم (Grand Total):* Rs. ${grandTotal}\n` +
       `-----------------------------------------\n` +
-      `براہ کرم میرا آرڈر کنفرم فرمائیں اور پارسل روانگی کی تفصیل فراہم کریں۔ شکریہ!`
+      `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}! برائے مہربانی میرا آرڈر کنفرم فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
     );
 
-    window.open(`https://wa.me/923000000000?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
   };
 
   return (
@@ -214,7 +216,7 @@ export const CartDrawer: React.FC = () => {
                   required
                   value={customerAddress}
                   onChange={(e) => setCustomerAddress(e.target.value)}
-                  placeholder={t('مکمل گھر کا پتہ', 'Delivery Address')}
+                  placeholder={t('مکمل پتہ', 'Delivery Address')}
                   className="w-full text-xs p-2.5 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600"
                 />
               </div>

@@ -1,5 +1,24 @@
 export type Language = 'ur' | 'en';
 
+export interface HakeemSettings {
+  nameUr: string;
+  nameEn: string;
+  titleUr: string;
+  titleEn: string;
+  degreeUr: string;
+  degreeEn: string;
+  regNo: string;
+  experienceYears: string;
+  avatarUrl: string;
+  phone: string;
+  whatsapp: string;
+  email: string;
+  addressUr: string;
+  addressEn: string;
+  clinicTimingsUr: string;
+  clinicTimingsEn: string;
+}
+
 export interface Product {
   id: string;
   nameUr: string;

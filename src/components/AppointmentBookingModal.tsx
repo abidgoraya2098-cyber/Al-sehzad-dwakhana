@@ -13,6 +13,7 @@ import {
   Stethoscope
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 import { useNotifications } from '../context/NotificationContext';
 
 interface AppointmentBookingModalProps {
@@ -27,6 +28,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
   defaultService = 'hakeem_checkup',
 }) => {
   const { isUrdu, t } = useLanguage();
+  const { hakeemSettings } = useAdmin();
   const { showToast } = useNotifications();
 
   const [service, setService] = useState<'hakeem_checkup' | 'hijama' | 'live_call'>(defaultService);
@@ -54,7 +56,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
 
     const serviceName =
       service === 'hakeem_checkup'
-        ? 'حکیم صاحب سے بالمشافہ معائنہ (In-Person Clinic Visit)'
+        ? `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn} سے بالمشافہ معائنہ (In-Person Clinic Visit)`
         : service === 'hijama'
         ? 'حجامہ و کپنگ تھراپی سیشن (Hijama Therapy)'
         : 'لائیو فون / واٹس ایپ کال مشورہ (Live Call Consultation)';
@@ -73,11 +75,11 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
       `⏰ *ٹائم سلاٹ:* ${slotName}\n` +
       `📝 *نوٹ / بیماری کی نوعیت:* ${notes || 'معمول کا طبی معائنہ'}\n` +
       `-----------------------------------------\n` +
-      `برائے مہربانی اپوائنٹمنٹ ٹائم کنفرم فرما دیں۔ شکریہ!`
+      `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}! برائے مہربانی اپوائنٹمنٹ ٹائم کنفرم فرما دیں۔ شکریہ!`
     );
 
     setTimeout(() => {
-      window.open(`https://wa.me/923000000000?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
     }, 900);
   };
 
@@ -90,7 +92,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 animate-fadeIn">
       <div className="bg-white w-full max-w-xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 max-h-[92vh] flex flex-col relative">
         {/* Header */}
-        <div className="p-5 bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white flex items-center justify-between">
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white flex items-center justify-between">
           <div className="flex items-center gap-2.5">
             <div className="w-10 h-10 rounded-xl bg-amber-400 text-emerald-950 flex items-center justify-center font-black">
               <Calendar className="w-5 h-5" />
@@ -100,7 +102,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
                 {t('معائنہ کا وقت و اپوائنٹمنٹ لیں', 'Book Hakeem / Hijama Appointment')}
               </h2>
               <p className="text-[11px] text-emerald-200">
-                {t('ٹوکن نمبر کے ساتھ قطار سے بچیں اور وقت بچائیں', 'Get a dedicated time slot & token number')}
+                {t(`زیرِ نگرانی: ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}`, `Under supervision of ${hakeemSettings.nameEn}`)}
               </p>
             </div>
           </div>
@@ -114,7 +116,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
         </div>
 
         {/* Content */}
-        <div className="overflow-y-auto p-5 sm:p-7 flex-1">
+        <div className="overflow-y-auto p-4 sm:p-6 flex-1">
           {isBooked ? (
             <div className="text-center py-8 space-y-4 animate-fadeIn">
               <div className="w-16 h-16 rounded-full bg-emerald-100 text-emerald-800 mx-auto flex items-center justify-center shadow-lg">
@@ -159,7 +161,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
                       className="hidden"
                     />
                     <Stethoscope className="w-4 h-4 text-emerald-700" />
-                    <span>{t('حکیم صاحب معائنہ', 'Clinic Visit')}</span>
+                    <span>{t('حکیم معائنہ', 'Clinic Visit')}</span>
                   </label>
 
                   <label className={`p-3 rounded-xl border flex items-center gap-2 cursor-pointer font-bold transition-all ${service === 'hijama' ? 'border-emerald-600 bg-emerald-50 text-emerald-950 shadow-xs' : 'border-slate-200 text-slate-700'}`}>
@@ -183,7 +185,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
                       className="hidden"
                     />
                     <Phone className="w-4 h-4 text-teal-600" />
-                    <span>{t('لائیو فون کال', 'Live Call')}</span>
+                    <span>{t('لائیو کال', 'Live Call')}</span>
                   </label>
                 </div>
               </div>
