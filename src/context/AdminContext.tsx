@@ -55,13 +55,20 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
+        if (
+          !parsed.phone ||
+          parsed.phone === '0300-0000000' ||
+          parsed.email === 'abidgoraya2098@gmail.com' ||
+          !parsed.nameUr ||
+          !parsed.nameUr.includes('نواز')
+        ) {
+          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultHakeemSettings));
+          return defaultHakeemSettings;
+        }
         return {
           ...defaultHakeemSettings,
           ...parsed,
           avatarUrl: parsed.avatarUrl && parsed.avatarUrl !== 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' ? parsed.avatarUrl : '/hakeem-nawaz.jpg',
-          phone: parsed.phone && parsed.phone !== '0300-0000000' ? parsed.phone : '0300-6458169',
-          whatsapp: parsed.whatsapp && parsed.whatsapp !== '923000000000' ? parsed.whatsapp : '923006458169',
-          email: parsed.email && parsed.email !== 'abidgoraya2098@gmail.com' ? parsed.email : 'Nawaznaji012@gmail.com',
         };
       }
       return defaultHakeemSettings;
