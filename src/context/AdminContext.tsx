@@ -33,6 +33,8 @@ const defaultHakeemSettings: HakeemSettings = {
   clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
 };
 
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v3';
+
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -46,21 +48,21 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [hakeemSettings, setHakeemSettings] = useState<HakeemSettings>(() => {
     try {
-      const saved = localStorage.getItem('dawakhana_hakeem_settings');
+      // Purge legacy storage keys to guarantee instantaneous sync
+      localStorage.removeItem('dawakhana_hakeem_settings');
+      localStorage.removeItem('dawakhana_hakeem_settings_v2');
+
+      const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        // If saved data has legacy dummy placeholder phone/email, override with updated real data
-        if (parsed.phone === '0300-0000000' || !parsed.phone || parsed.email === 'abidgoraya2098@gmail.com') {
-          return {
-            ...defaultHakeemSettings,
-            ...parsed,
-            avatarUrl: parsed.avatarUrl && parsed.avatarUrl !== 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' ? parsed.avatarUrl : '/hakeem-nawaz.jpg',
-            phone: '0300-6458169',
-            whatsapp: '923006458169',
-            email: 'Nawaznaji012@gmail.com',
-          };
-        }
-        return { ...defaultHakeemSettings, ...parsed };
+        return {
+          ...defaultHakeemSettings,
+          ...parsed,
+          avatarUrl: parsed.avatarUrl && parsed.avatarUrl !== 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' ? parsed.avatarUrl : '/hakeem-nawaz.jpg',
+          phone: parsed.phone && parsed.phone !== '0300-0000000' ? parsed.phone : '0300-6458169',
+          whatsapp: parsed.whatsapp && parsed.whatsapp !== '923000000000' ? parsed.whatsapp : '923006458169',
+          email: parsed.email && parsed.email !== 'abidgoraya2098@gmail.com' ? parsed.email : 'Nawaznaji012@gmail.com',
+        };
       }
       return defaultHakeemSettings;
     } catch {
@@ -78,7 +80,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    localStorage.setItem('dawakhana_hakeem_settings', JSON.stringify(hakeemSettings));
+    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(hakeemSettings));
   }, [hakeemSettings]);
 
   useEffect(() => {

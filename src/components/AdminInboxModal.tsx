@@ -60,6 +60,21 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [addressUr, setAddressUr] = useState(hakeemSettings.addressUr);
   const [avatarUrl, setAvatarUrl] = useState(hakeemSettings.avatarUrl);
 
+  // Sync state whenever modal opens or settings change
+  useEffect(() => {
+    if (isOpen) {
+      setNameUr(hakeemSettings.nameUr);
+      setNameEn(hakeemSettings.nameEn);
+      setTitleUr(hakeemSettings.titleUr);
+      setDegreeUr(hakeemSettings.degreeUr);
+      setRegNo(hakeemSettings.regNo);
+      setPhone(hakeemSettings.phone);
+      setEmail(hakeemSettings.email);
+      setAddressUr(hakeemSettings.addressUr);
+      setAvatarUrl(hakeemSettings.avatarUrl);
+    }
+  }, [isOpen, hakeemSettings]);
+
   // Password Reset State
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

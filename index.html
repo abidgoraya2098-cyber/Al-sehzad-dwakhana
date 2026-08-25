@@ -64,8 +64,16 @@
         window.dispatchEvent(new CustomEvent("pwa-installed"));
       });
 
-      // Register and Auto-Update Service Worker
+      // Register, Update and Auto-Refresh on Service Worker change
       if ("serviceWorker" in navigator) {
+        let refreshing = false;
+        navigator.serviceWorker.addEventListener("controllerchange", function() {
+          if (!refreshing) {
+            refreshing = true;
+            window.location.reload();
+          }
+        });
+
         window.addEventListener("load", function() {
           navigator.serviceWorker
             .register("/sw.js", { scope: "/" })
