@@ -23,10 +23,10 @@ const defaultHakeemSettings: HakeemSettings = {
   degreeEn: 'Faculty of Tibb & Surgery (FTJ / BUMS)',
   regNo: 'NCT-89423',
   experienceYears: '30+',
-  avatarUrl: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80',
-  phone: '0300-0000000',
-  whatsapp: '923000000000',
-  email: 'abidgoraya2098@gmail.com',
+  avatarUrl: '/hakeem-nawaz.jpg',
+  phone: '0300-6458169',
+  whatsapp: '923006458169',
+  email: 'Nawaznaji012@gmail.com',
   addressUr: 'الشہزاد دواخانہ اینڈ ہربل کلینک، مین جی ٹی روڈ، گوجرانوالہ، پنجاب، پاکستان',
   addressEn: 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan',
   clinicTimingsUr: 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے (جمعہ تعطیل)',
@@ -48,7 +48,19 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     try {
       const saved = localStorage.getItem('dawakhana_hakeem_settings');
       if (saved) {
-        return { ...defaultHakeemSettings, ...JSON.parse(saved) };
+        const parsed = JSON.parse(saved);
+        // If saved data has legacy dummy placeholder phone/email, override with updated real data
+        if (parsed.phone === '0300-0000000' || !parsed.phone || parsed.email === 'abidgoraya2098@gmail.com') {
+          return {
+            ...defaultHakeemSettings,
+            ...parsed,
+            avatarUrl: parsed.avatarUrl && parsed.avatarUrl !== 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' ? parsed.avatarUrl : '/hakeem-nawaz.jpg',
+            phone: '0300-6458169',
+            whatsapp: '923006458169',
+            email: 'Nawaznaji012@gmail.com',
+          };
+        }
+        return { ...defaultHakeemSettings, ...parsed };
       }
       return defaultHakeemSettings;
     } catch {

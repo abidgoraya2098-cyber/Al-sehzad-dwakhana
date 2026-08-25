@@ -15,6 +15,7 @@ import {
 import { Product } from '../types';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
+import { useAdmin } from '../context/AdminContext';
 
 interface ProductDetailModalProps {
   product: Product | null;
@@ -27,6 +28,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
 }) => {
   const { isUrdu, t } = useLanguage();
   const { addToCart } = useCart();
+  const { hakeemSettings } = useAdmin();
   const [quantity, setQuantity] = useState(1);
 
   if (!product) return null;
@@ -46,7 +48,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       `⚖️ وزن: ${isUrdu ? product.weightUr : product.weight}\n\n` +
       `برائے مہربانی ڈلیوری کی تفصیلات فراہم کریں۔ شکریہ!`
     );
-    window.open(`https://wa.me/923000000000?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
   };
 
   return (

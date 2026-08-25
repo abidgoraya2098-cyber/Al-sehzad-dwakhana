@@ -10,9 +10,11 @@ import {
   Percent
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 
 export const CourseEstimator: React.FC = () => {
   const { isUrdu, t } = useLanguage();
+  const { hakeemSettings } = useAdmin();
 
   const [condition, setCondition] = useState<'digestive' | 'joints' | 'vitality' | 'hair' | 'liver'>('vitality');
   const [duration, setDuration] = useState<'15_days' | '1_month' | '2_months'>('1_month');
@@ -99,7 +101,7 @@ export const CourseEstimator: React.FC = () => {
       `براہ کرم میرا کورس بک فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
     );
 
-    window.open(`https://wa.me/923000000000?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
   };
 
   return (

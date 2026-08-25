@@ -11,6 +11,7 @@ import {
   Award
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 
 interface HijamaServicesProps {
   onBookHijama: () => void;
@@ -20,6 +21,7 @@ export const HijamaServices: React.FC<HijamaServicesProps> = ({
   onBookHijama,
 }) => {
   const { isUrdu, t } = useLanguage();
+  const { hakeemSettings } = useAdmin();
 
   const hijamaBenefits = [
     {
@@ -112,11 +114,11 @@ export const HijamaServices: React.FC<HijamaServicesProps> = ({
             </button>
 
             <a
-              href="tel:+923000000000"
+              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
               className="px-5 py-3.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl border border-emerald-500 transition-all flex items-center gap-2"
             >
               <Phone className="w-4 h-4" />
-              <span>{t('براہِ راست کال کریں', 'Direct Phone Call')}</span>
+              <span>{t(`براہِ راست کال (${hakeemSettings.phone})`, `Call (${hakeemSettings.phone})`)}</span>
             </a>
           </div>
         </div>
