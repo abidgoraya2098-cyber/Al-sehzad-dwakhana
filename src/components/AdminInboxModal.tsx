@@ -37,7 +37,6 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     updateConsultationStatus,
     deleteConsultation,
     logoutAdmin,
-    adminEmail,
     hakeemSettings,
     updateHakeemSettings,
     updateAdminPassword,
@@ -49,29 +48,29 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'new' | 'in_progress' | 'completed'>('all');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Form State for Hakeem Profile Edit
-  const [nameUr, setNameUr] = useState(hakeemSettings.nameUr);
-  const [nameEn, setNameEn] = useState(hakeemSettings.nameEn);
-  const [titleUr, setTitleUr] = useState(hakeemSettings.titleUr);
-  const [degreeUr, setDegreeUr] = useState(hakeemSettings.degreeUr);
-  const [regNo, setRegNo] = useState(hakeemSettings.regNo);
-  const [phone, setPhone] = useState(hakeemSettings.phone);
-  const [email, setEmail] = useState(hakeemSettings.email);
-  const [addressUr, setAddressUr] = useState(hakeemSettings.addressUr);
-  const [avatarUrl, setAvatarUrl] = useState(hakeemSettings.avatarUrl);
+  // Form State for Hakeem Profile Edit with safe defaults
+  const [nameUr, setNameUr] = useState(hakeemSettings?.nameUr || 'حکیم محمد نواز احمد');
+  const [nameEn, setNameEn] = useState(hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad');
+  const [titleUr, setTitleUr] = useState(hakeemSettings?.titleUr || 'حکیم حاذق و سینئر نباض');
+  const [degreeUr, setDegreeUr] = useState(hakeemSettings?.degreeUr || 'فاضل الطب والجراحت (F.T.J / B.U.M.S)');
+  const [regNo, setRegNo] = useState(hakeemSettings?.regNo || 'NCT-89423');
+  const [phone, setPhone] = useState(hakeemSettings?.phone || '0300-6458169');
+  const [email, setEmail] = useState(hakeemSettings?.email || 'nawaznaji012@gmail.com');
+  const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
+  const [avatarUrl, setAvatarUrl] = useState(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
 
   // Sync state whenever modal opens or settings change
   useEffect(() => {
-    if (isOpen) {
-      setNameUr(hakeemSettings.nameUr);
-      setNameEn(hakeemSettings.nameEn);
-      setTitleUr(hakeemSettings.titleUr);
-      setDegreeUr(hakeemSettings.degreeUr);
-      setRegNo(hakeemSettings.regNo);
-      setPhone(hakeemSettings.phone);
-      setEmail(hakeemSettings.email);
-      setAddressUr(hakeemSettings.addressUr);
-      setAvatarUrl(hakeemSettings.avatarUrl);
+    if (isOpen && hakeemSettings) {
+      setNameUr(hakeemSettings.nameUr || 'حکیم محمد نواز احمد');
+      setNameEn(hakeemSettings.nameEn || 'Hakim Muhammad Nawaz Ahmad');
+      setTitleUr(hakeemSettings.titleUr || 'حکیم حاذق و سینئر نباض');
+      setDegreeUr(hakeemSettings.degreeUr || 'فاضل الطب والجراحت (F.T.J / B.U.M.S)');
+      setRegNo(hakeemSettings.regNo || 'NCT-89423');
+      setPhone(hakeemSettings.phone || '0300-6458169');
+      setEmail(hakeemSettings.email || 'nawaznaji012@gmail.com');
+      setAddressUr(hakeemSettings.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
+      setAvatarUrl(hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg');
     }
   }, [isOpen, hakeemSettings]);
 

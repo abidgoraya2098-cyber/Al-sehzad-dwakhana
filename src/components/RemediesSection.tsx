@@ -33,11 +33,11 @@ export const RemediesSection: React.FC<RemediesSectionProps> = ({
     if (!filterQuery) return true;
     const q = filterQuery.toLowerCase();
     return (
-      rem.titleUr.toLowerCase().includes(q) ||
-      rem.titleEn.toLowerCase().includes(q) ||
-      rem.ailmentUr.toLowerCase().includes(q) ||
-      rem.ailmentEn.toLowerCase().includes(q) ||
-      rem.categoryUr.toLowerCase().includes(q)
+      (rem?.titleUr || '').toLowerCase().includes(q) ||
+      (rem?.titleEn || '').toLowerCase().includes(q) ||
+      (rem?.ailmentUr || '').toLowerCase().includes(q) ||
+      (rem?.ailmentEn || '').toLowerCase().includes(q) ||
+      (rem?.categoryUr || '').toLowerCase().includes(q)
     );
   });
 

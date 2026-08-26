@@ -45,13 +45,14 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
       .filter((product) => {
         const matchesCategory =
           selectedCategory === 'all' || product.category === selectedCategory;
+        const q = (searchQuery || '').toLowerCase();
         const matchesSearch =
-          !searchQuery ||
-          product.nameUr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.nameEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.descriptionUr.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.descriptionEn.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          product.categoryUr.toLowerCase().includes(searchQuery.toLowerCase());
+          !q ||
+          (product?.nameUr || '').toLowerCase().includes(q) ||
+          (product?.nameEn || '').toLowerCase().includes(q) ||
+          (product?.descriptionUr || '').toLowerCase().includes(q) ||
+          (product?.descriptionEn || '').toLowerCase().includes(q) ||
+          (product?.categoryUr || '').toLowerCase().includes(q);
         return matchesCategory && matchesSearch;
       })
       .sort((a, b) => {

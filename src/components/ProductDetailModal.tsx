@@ -48,7 +48,7 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
       `⚖️ وزن: ${isUrdu ? product.weightUr : product.weight}\n\n` +
       `برائے مہربانی ڈلیوری کی تفصیلات فراہم کریں۔ شکریہ!`
     );
-    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
   };
 
   return (
