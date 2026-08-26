@@ -26,6 +26,7 @@ export class ErrorBoundary extends Component<Props, State> {
 
   private handleReload = () => {
     try {
+      this.setState({ hasError: false, error: null });
       window.location.reload();
     } catch {
       window.location.href = '/';
@@ -41,10 +42,16 @@ export class ErrorBoundary extends Component<Props, State> {
           names.forEach((name) => caches.delete(name));
         });
       }
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then((registrations) => {
+          registrations.forEach((r) => r.unregister());
+        });
+      }
     } catch (e) {
       console.warn(e);
     }
-    window.location.href = '/';
+    this.setState({ hasError: false, error: null });
+    window.location.reload();
   };
 
   public render() {
@@ -55,7 +62,7 @@ export class ErrorBoundary extends Component<Props, State> {
             <AlertTriangle className="w-8 h-8" />
           </div>
           <h1 className="text-xl font-bold mb-2 text-slate-900">الشہزاد دواخانہ اینڈ ہربل کلینک</h1>
-          <p className="text-sm text-slate-600 max-w-md mb-6 leading-relaxed">
+          <p className="text-sm text-slate-600 max-w-md mb-4 leading-relaxed">
             صفحہ لوڈ کرنے میں عارضی دقت پیش آئی ہے۔ آپ صفحہ ریفریش کر سکتے ہیں یا کیش ری سیٹ کر کے دوبارہ کھول سکتے ہیں۔
           </p>
 

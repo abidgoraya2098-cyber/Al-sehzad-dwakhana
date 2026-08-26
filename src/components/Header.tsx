@@ -104,17 +104,17 @@ export const Header: React.FC<HeaderProps> = ({
             <ClinicStatusBadge />
             <span className="text-emerald-300">|</span>
             <span className="font-semibold text-emerald-100">
-              {isUrdu ? hakeemSettings.clinicTimingsUr : hakeemSettings.clinicTimingsEn}
+              {isUrdu ? (hakeemSettings?.clinicTimingsUr || 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے') : (hakeemSettings?.clinicTimingsEn || '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM')}
             </span>
           </div>
 
           <div className="flex items-center gap-4">
             <a
-              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+              href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
               className="flex items-center gap-1.5 text-amber-300 hover:text-amber-200 transition-colors font-extrabold bg-amber-400/20 px-2.5 py-0.5 rounded-full border border-amber-400/40"
             >
               <Phone className="w-3.5 h-3.5" />
-              <span>{t(`لائیو کال: ${hakeemSettings.phone}`, `Call: ${hakeemSettings.phone}`)}</span>
+              <span>{t(`لائیو کال: ${hakeemSettings?.phone || '0300-6458169'}`, `Call: ${hakeemSettings?.phone || '0300-6458169'}`)}</span>
             </a>
           </div>
         </div>
@@ -235,11 +235,11 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="pb-2 border-b border-slate-100 flex items-center justify-between">
             <ClinicStatusBadge />
             <a
-              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+              href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
               className="flex items-center gap-1 px-3 py-1 bg-amber-400 text-emerald-950 text-xs font-black rounded-lg shadow-xs"
             >
               <Phone className="w-3.5 h-3.5 fill-emerald-950" />
-              <span>{hakeemSettings.phone}</span>
+              <span>{hakeemSettings?.phone || '0300-6458169'}</span>
             </a>
           </div>
 

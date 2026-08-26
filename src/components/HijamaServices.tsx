@@ -114,11 +114,11 @@ export const HijamaServices: React.FC<HijamaServicesProps> = ({
             </button>
 
             <a
-              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+              href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
               className="px-5 py-3.5 bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs sm:text-sm rounded-xl border border-emerald-500 transition-all flex items-center gap-2"
             >
               <Phone className="w-4 h-4" />
-              <span>{t(`براہِ راست کال (${hakeemSettings.phone})`, `Call (${hakeemSettings.phone})`)}</span>
+              <span>{t(`براہِ راست کال (${hakeemSettings?.phone || '0300-6458169'})`, `Call (${hakeemSettings?.phone || '0300-6458169'})`)}</span>
             </a>
           </div>
         </div>

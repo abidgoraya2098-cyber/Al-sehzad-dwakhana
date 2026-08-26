@@ -311,7 +311,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                       )}
 
                       <a
-                        href={`https://wa.me/${item.phone.replace(/\D/g, '')}?text=${encodeURIComponent(`السلام علیکم محترم ${item.patientName}! میں الشہزاد دواخانہ سے آپ کے آن لائن کیس کے سلسلے میں رابطہ کر رہا ہوں۔`)}`}
+                        href={`https://wa.me/${(item?.phone || '').replace(/\D/g, '') || '923006458169'}?text=${encodeURIComponent(`السلام علیکم محترم ${item?.patientName || 'مریض'}! میں الشہزاد دواخانہ سے آپ کے آن لائن کیس کے سلسلے میں رابطہ کر رہا ہوں۔`)}`}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-[#25D366] hover:bg-emerald-600 text-white text-xs font-bold shadow-xs transition-colors"
