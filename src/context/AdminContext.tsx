@@ -33,7 +33,7 @@ const defaultHakeemSettings: HakeemSettings = {
   clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
 };
 
-const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v3';
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v5';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
@@ -48,9 +48,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const [hakeemSettings, setHakeemSettings] = useState<HakeemSettings>(() => {
     try {
-      // Purge legacy storage keys to guarantee instantaneous sync
-      localStorage.removeItem('dawakhana_hakeem_settings');
-      localStorage.removeItem('dawakhana_hakeem_settings_v2');
+      // Instant purge of all older cached versions to ensure 100% updated phone/email across all browsers
+      ['dawakhana_hakeem_settings', 'dawakhana_hakeem_settings_v2', 'dawakhana_hakeem_settings_v3', 'dawakhana_hakeem_settings_v4'].forEach(k => localStorage.removeItem(k));
 
       const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (saved) {
@@ -58,6 +57,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         if (
           !parsed.phone ||
           parsed.phone === '0300-0000000' ||
+          parsed.phone === '03000000000' ||
+          !parsed.email ||
           parsed.email === 'abidgoraya2098@gmail.com' ||
           !parsed.nameUr ||
           !parsed.nameUr.includes('نواز')
@@ -68,9 +69,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return {
           ...defaultHakeemSettings,
           ...parsed,
-          avatarUrl: parsed.avatarUrl && parsed.avatarUrl !== 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80' ? parsed.avatarUrl : '/hakeem-nawaz.jpg',
+          phone: parsed.phone || '0300-6458169',
+          whatsapp: parsed.whatsapp || '923006458169',
+          email: parsed.email || 'Nawaznaji012@gmail.com',
+          avatarUrl: parsed.avatarUrl || '/hakeem-nawaz.jpg',
         };
       }
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultHakeemSettings));
       return defaultHakeemSettings;
     } catch {
       return defaultHakeemSettings;
