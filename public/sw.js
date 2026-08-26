@@ -1,21 +1,19 @@
-// Self-destruct and purge all service worker caches for 100% instant live sync
-self.addEventListener('install', () => {
+// Minimal Active Service Worker to meet Google Chrome WebAPK installability criteria
+const CACHE_NAME = 'al-shehzad-v1';
+
+self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(keys.map((key) => caches.delete(key)));
-    }).then(() => {
-      return self.registration.unregister();
-    }).then(() => {
-      return self.clients.claim();
-    })
-  );
+  event.waitUntil(self.clients.claim());
 });
 
-self.addEventListener('fetch', () => {
-  // Pass-through to network directly
-  return;
+self.addEventListener('fetch', (event) => {
+  // Required fetch handler for Chrome PWA criteria
+  event.respondWith(
+    fetch(event.request).catch(() => {
+      return caches.match(event.request);
+    })
+  );
 });

@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { DawakhanaLogo } from './DawakhanaLogo';
 import { ClinicStatusBadge } from './ClinicStatusBadge';
+import { InstallButton } from './InstallButton';
 import { useLanguage } from '../context/LanguageContext';
 import { useCart } from '../context/CartContext';
 import { useNotifications } from '../context/NotificationContext';
@@ -161,21 +162,8 @@ export const Header: React.FC<HeaderProps> = ({
             <span>{t('وقت لیں', 'Book Slot')}</span>
           </button>
 
-          {/* PWA Install Button */}
-          <button
-            onClick={() => {
-              if ((window as any).deferredPrompt || (window as any).deferredPwaPrompt) {
-                handleInstallPwa();
-              } else {
-                window.dispatchEvent(new CustomEvent('open-pwa-install'));
-              }
-            }}
-            className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 text-xs font-bold text-emerald-950 bg-emerald-100 hover:bg-emerald-200 rounded-xl border border-emerald-300 transition-all shadow-xs"
-            title={t('الشہزاد دواخانہ ایپ انسٹال کریں', 'Install Official App')}
-          >
-            <Download className="w-3.5 h-3.5 text-emerald-800" />
-            <span className="hidden sm:inline">{t('انسٹال', 'Install')}</span>
-          </button>
+          {/* Direct 1-Click Native Chrome Install Button */}
+          <InstallButton />
 
           {/* Language Toggle */}
           <button

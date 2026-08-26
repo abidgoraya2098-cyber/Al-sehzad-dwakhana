@@ -8,7 +8,7 @@
     <!-- Meta Descriptions & SEO -->
     <meta name="description" content="الشہزاد دواخانہ اینڈ ہربل کلینک — قدرتی جڑی بوٹیوں سے علاج، خالص ادویات، معجون، عرقیات، کشتہ جات اور آن لائن حکیم صاحب سے مفت طبی مشورہ۔" />
     <meta name="keywords" content="Al Shehzad Dawakhana, الشہزاد دواخانہ, Tibb-e-Unani, Herbal Medicine, Hakeem Consultation, Desi Ilaj, Majoon, Arqiat, Pakistan Herbal Clinic" />
-    <meta name="author" content="Hakim Muhammad Nawaz Ahmad (Nawaznaji012@gmail.com)" />
+    <meta name="author" content="Abid Abbas Ali Goraya (abidgoraya2098@gmail.com)" />
     <meta name="developer" content="Abid Abbas Ali Goraya (عابد عباس علی گورائیہ - 03004800071)" />
     <meta name="copyright" content="© 2026 Al-Shehzad Dawakhana. All Rights Reserved." />
     <meta name="format-detection" content="telephone=no" />
@@ -44,46 +44,33 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Amiri:ital,wght@0,400;0,700;1,400&family=Noto+Nastaliq+Urdu:wght@400;700&family=Noto+Sans+Arabic:wght@300;400;500;600;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
-    <!-- Google Chrome PWA Event Capture & Instant Service Worker Auto-Update -->
+    <!-- Silent Chrome PWA beforeinstallprompt Capture & Service Worker Registration -->
     <script>
       window.deferredPrompt = null;
-      window.deferredPwaPrompt = null;
 
-      window.addEventListener("beforeinstallprompt", function(e) {
+      // 1. Intercept beforeinstallprompt silently and save the event
+      window.addEventListener('beforeinstallprompt', function(e) {
         e.preventDefault();
         window.deferredPrompt = e;
-        window.deferredPwaPrompt = e;
-        console.log("[PWA] Al-Shehzad Dawakhana install prompt ready");
-        window.dispatchEvent(new CustomEvent("pwa-ready"));
+        window.dispatchEvent(new CustomEvent('pwa-prompt-ready'));
       });
 
-      window.addEventListener("appinstalled", function() {
-        console.log("[PWA] Al-Shehzad Dawakhana installed successfully!");
+      // 2. Clear event when app is installed
+      window.addEventListener('appinstalled', function() {
         window.deferredPrompt = null;
-        window.deferredPwaPrompt = null;
-        window.dispatchEvent(new CustomEvent("pwa-installed"));
+        window.dispatchEvent(new CustomEvent('pwa-installed'));
       });
-    </script>
 
-    <!-- Real-Time Sync & Immediate Cache-Busting -->
-    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
-    <meta http-equiv="Pragma" content="no-cache" />
-    <meta http-equiv="Expires" content="0" />
-
-    <script>
-      // Instantly unregister all stale Service Workers and purge browser caches
+      // 3. Register minimal active Service Worker for Chrome PWA Criteria
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(function(registrations) {
-          for (let registration of registrations) {
-            registration.unregister();
-          }
-        });
-      }
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          for (let name of names) {
-            caches.delete(name);
-          }
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js', { scope: '/' })
+            .then(function(reg) {
+              console.log('ServiceWorker registered with scope:', reg.scope);
+            })
+            .catch(function(err) {
+              console.log('ServiceWorker registration failed:', err);
+            });
         });
       }
     </script>

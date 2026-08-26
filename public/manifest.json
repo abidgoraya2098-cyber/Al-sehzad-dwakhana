@@ -1,15 +1,16 @@
 {
+  "id": "/",
   "name": "الشہزاد دواخانہ اینڈ ہربل کلینک",
   "short_name": "الشہزاد دواخانہ",
   "description": "الشہزاد دواخانہ اینڈ ہربل کلینک — خالص دیسی ادویات، معجون، عرقیات، کشتہ جات اور آن لائن حکیم کنسلٹیشن",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#064e3b",
   "theme_color": "#064e3b",
   "orientation": "portrait-primary",
   "dir": "rtl",
   "lang": "ur",
-  "scope": "/",
   "categories": ["medical", "health", "shopping", "lifestyle"],
   "icons": [
     {
@@ -35,34 +36,6 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
-    },
-    {
-      "src": "/logo.svg",
-      "sizes": "any",
-      "type": "image/svg+xml"
-    }
-  ],
-  "shortcuts": [
-    {
-      "name": "آن لائن حکیم مشورہ (Consultation)",
-      "short_name": "حکیم مشورہ",
-      "description": "حکیم صاحب سے فوری آن لائن طبی معائنہ و مشورہ حاصل کریں",
-      "url": "/#consultation",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "ادویات و پراڈکٹس (Medicines)",
-      "short_name": "دیسی ادویات",
-      "description": "خالص معجون، عرقیات، کشتہ جات اور ہربل پراڈکٹس",
-      "url": "/#products",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
-    },
-    {
-      "name": "طبی مزاج ٹیسٹ (Mizaj Quiz)",
-      "short_name": "مزاج ٹیسٹ",
-      "description": "اپنا طبی مزاج معلوم کریں اور مفید غذائیں جانیں",
-      "url": "/#mizaj-quiz",
-      "icons": [{ "src": "/icon-192.png", "sizes": "192x192" }]
     }
   ]
 }

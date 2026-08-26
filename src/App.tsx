@@ -23,7 +23,6 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminInboxModal } from './components/AdminInboxModal';
 import { NotificationModal } from './components/NotificationModal';
 import { SplashScreen } from './components/SplashScreen';
-import { PwaInstallPrompt } from './components/PwaInstallPrompt';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { Product } from './types';
 import { CheckCircle2 } from 'lucide-react';
@@ -155,8 +154,6 @@ const MainAppContent: React.FC = () => {
       />
 
       <NotificationModal />
-
-      <PwaInstallPrompt />
     </div>
   );
 };
