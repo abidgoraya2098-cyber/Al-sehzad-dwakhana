@@ -64,10 +64,10 @@ export const CartDrawer: React.FC = () => {
       `🚚 *ڈلیوری چارجز:* ${deliveryCharges === 0 ? 'مفت (Free)' : `Rs. ${deliveryCharges}`}\n` +
       `💰 *کل رقم (Grand Total):* Rs. ${grandTotal}\n` +
       `-----------------------------------------\n` +
-      `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}! برائے مہربانی میرا آرڈر کنفرم فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
+      `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم محمد نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad')}! برائے مہربانی میرا آرڈر کنفرم فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
     );
 
-    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
   };
 
   return (

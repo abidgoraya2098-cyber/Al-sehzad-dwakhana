@@ -97,7 +97,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
     setTimeout(() => {
       setIsSubmitting(false);
       onClose();
-      window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
+      window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
     }, 700);
   };
 
@@ -115,7 +115,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
                 {t('آن لائن حکیم کنسلٹیشن و نسخہ اپلوڈ', 'Online Consultation & Prescription')}
               </h2>
               <p className="text-[11px] text-emerald-200">
-                {t(`زیرِ سرپرستی: ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}`, `Under supervision of ${hakeemSettings.nameEn}`)}
+                {t(`زیرِ سرپرستی: ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم محمد نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad')}`, `Under supervision of ${hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad'}`)}
               </p>
             </div>
           </div>

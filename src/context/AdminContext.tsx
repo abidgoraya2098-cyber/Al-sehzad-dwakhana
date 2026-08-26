@@ -14,7 +14,7 @@ interface AdminContextType {
   deleteConsultation: (id: string) => void;
 }
 
-const defaultHakeemSettings: HakeemSettings = {
+export const defaultHakeemSettings: HakeemSettings = {
   nameUr: 'حکیم محمد نواز احمد',
   nameEn: 'Hakim Muhammad Nawaz Ahmad',
   titleUr: 'حکیم حاذق و سینئر نباض',
@@ -26,56 +26,52 @@ const defaultHakeemSettings: HakeemSettings = {
   avatarUrl: '/hakeem-nawaz.jpg',
   phone: '0300-6458169',
   whatsapp: '923006458169',
-  email: 'Nawaznaji012@gmail.com',
+  email: 'nawaznaji012@gmail.com',
   addressUr: 'الشہزاد دواخانہ اینڈ ہربل کلینک، مین جی ٹی روڈ، گوجرانوالہ، پنجاب، پاکستان',
   addressEn: 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan',
   clinicTimingsUr: 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے (جمعہ تعطیل)',
   clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
 };
 
-const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v5';
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v6';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState<boolean>(() => {
-    return localStorage.getItem('dawakhana_admin_auth') === 'true';
+    try {
+      return localStorage.getItem('dawakhana_admin_auth') === 'true';
+    } catch {
+      return false;
+    }
   });
 
   const [adminPassword, setAdminPassword] = useState<string>(() => {
-    return localStorage.getItem('dawakhana_admin_pass') || '5225';
+    try {
+      return localStorage.getItem('dawakhana_admin_pass') || '5225';
+    } catch {
+      return '5225';
+    }
   });
 
   const [hakeemSettings, setHakeemSettings] = useState<HakeemSettings>(() => {
     try {
-      // Instant purge of all older cached versions to ensure 100% updated phone/email across all browsers
-      ['dawakhana_hakeem_settings', 'dawakhana_hakeem_settings_v2', 'dawakhana_hakeem_settings_v3', 'dawakhana_hakeem_settings_v4'].forEach(k => localStorage.removeItem(k));
-
       const saved = localStorage.getItem(SETTINGS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (
-          !parsed.phone ||
-          parsed.phone === '0300-0000000' ||
-          parsed.phone === '03000000000' ||
-          !parsed.email ||
-          parsed.email === 'abidgoraya2098@gmail.com' ||
-          !parsed.nameUr ||
-          !parsed.nameUr.includes('نواز')
-        ) {
-          localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultHakeemSettings));
-          return defaultHakeemSettings;
+        if (parsed && typeof parsed === 'object') {
+          return {
+            ...defaultHakeemSettings,
+            ...parsed,
+            nameUr: parsed.nameUr || defaultHakeemSettings.nameUr,
+            nameEn: parsed.nameEn || defaultHakeemSettings.nameEn,
+            avatarUrl: parsed.avatarUrl || '/hakeem-nawaz.jpg',
+            phone: parsed.phone || '0300-6458169',
+            whatsapp: parsed.whatsapp || '923006458169',
+            email: parsed.email || 'nawaznaji012@gmail.com',
+          };
         }
-        return {
-          ...defaultHakeemSettings,
-          ...parsed,
-          phone: parsed.phone || '0300-6458169',
-          whatsapp: parsed.whatsapp || '923006458169',
-          email: parsed.email || 'Nawaznaji012@gmail.com',
-          avatarUrl: parsed.avatarUrl || '/hakeem-nawaz.jpg',
-        };
       }
-      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(defaultHakeemSettings));
       return defaultHakeemSettings;
     } catch {
       return defaultHakeemSettings;
@@ -92,18 +88,27 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   });
 
   useEffect(() => {
-    localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(hakeemSettings));
+    try {
+      localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(hakeemSettings));
+    } catch (e) {
+      console.warn('localStorage error:', e);
+    }
   }, [hakeemSettings]);
 
   useEffect(() => {
-    localStorage.setItem('dawakhana_consultations', JSON.stringify(consultations));
+    try {
+      localStorage.setItem('dawakhana_consultations', JSON.stringify(consultations));
+    } catch (e) {
+      console.warn('localStorage error:', e);
+    }
   }, [consultations]);
 
   const loginAdmin = (pass: string): boolean => {
-    // Verified with password '5225' or updated password
-    if (pass.trim() === adminPassword || pass.trim() === '5225') {
+    if (pass && (pass.trim() === adminPassword || pass.trim() === '5225')) {
       setIsAdminLoggedIn(true);
-      localStorage.setItem('dawakhana_admin_auth', 'true');
+      try {
+        localStorage.setItem('dawakhana_admin_auth', 'true');
+      } catch {}
       return true;
     }
     return false;
@@ -111,24 +116,34 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const logoutAdmin = () => {
     setIsAdminLoggedIn(false);
-    localStorage.removeItem('dawakhana_admin_auth');
+    try {
+      localStorage.removeItem('dawakhana_admin_auth');
+    } catch {}
   };
 
   const updateAdminPassword = (newPass: string): boolean => {
-    if (newPass.trim().length >= 4) {
-      setAdminPassword(newPass.trim());
-      localStorage.setItem('dawakhana_admin_pass', newPass.trim());
+    if (newPass && newPass.trim().length >= 4) {
+      const trimmed = newPass.trim();
+      setAdminPassword(trimmed);
+      try {
+        localStorage.setItem('dawakhana_admin_pass', trimmed);
+      } catch {}
       return true;
     }
     return false;
   };
 
   const updateHakeemSettings = (newSettings: Partial<HakeemSettings>) => {
-    setHakeemSettings((prev) => ({
-      ...prev,
-      ...newSettings,
-      whatsapp: newSettings.phone ? newSettings.phone.replace(/\D/g, '') : prev.whatsapp,
-    }));
+    setHakeemSettings((prev) => {
+      const phoneStr = String(newSettings.phone || prev.phone || '0300-6458169');
+      const cleanWhatsapp = phoneStr.replace(/\D/g, '') || '923006458169';
+      return {
+        ...prev,
+        ...newSettings,
+        phone: phoneStr,
+        whatsapp: cleanWhatsapp,
+      };
+    });
   };
 
   const addConsultation = (item: Omit<ConsultationSubmission, 'id' | 'timestamp' | 'status'>) => {
@@ -174,7 +189,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useAdmin = (): AdminContextType => {
   const context = useContext(AdminContext);
   if (!context) {
-    throw new Error('useAdmin must be used within an AdminProvider');
+    return {
+      isAdminLoggedIn: false,
+      loginAdmin: () => false,
+      logoutAdmin: () => {},
+      updateAdminPassword: () => false,
+      hakeemSettings: defaultHakeemSettings,
+      updateHakeemSettings: () => {},
+      consultations: [],
+      addConsultation: () => {},
+      updateConsultationStatus: () => {},
+      deleteConsultation: () => {},
+    };
   }
   return context;
 };

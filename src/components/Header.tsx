@@ -145,7 +145,7 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* Direct Live Call Button */}
           <a
-            href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+            href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
             className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500"
             title={t('حکیم صاحب کو لائیو کال کریں', 'Direct Phone Call')}
           >

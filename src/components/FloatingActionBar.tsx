@@ -53,19 +53,19 @@ export const FloatingActionBar: React.FC<FloatingActionBarProps> = ({
 
       {/* Floating Direct Phone Call Button */}
       <a
-        href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+        href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
         className="p-3 sm:p-3.5 rounded-full bg-amber-400 text-emerald-950 shadow-2xl hover:scale-105 transition-all border-2 border-amber-500 group flex items-center gap-2"
         title={t('حکیم صاحب کو لائیو کال ملائیں', 'Direct Phone Call')}
       >
         <Phone className="w-5 h-5 fill-emerald-950" />
         <span className="max-w-0 overflow-hidden group-hover:max-w-xs transition-all duration-300 text-xs font-black whitespace-nowrap">
-          {t(`لائیو کال (${hakeemSettings.phone})`, 'Call Hakim')}
+          {t(`لائیو کال (${hakeemSettings?.phone || '0300-6458169'})`, 'Call Hakim')}
         </span>
       </a>
 
       {/* Floating WhatsApp Action Button with Pulse Glow */}
       <a
-        href={`https://wa.me/${hakeemSettings.whatsapp}?text=${encodeURIComponent('السلام علیکم! میں الشہزاد دواخانہ سے طبی مشورہ و ادویات کے بارے میں رابطہ کر رہا ہوں۔')}`}
+        href={`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${encodeURIComponent('السلام علیکم! میں الشہزاد دواخانہ سے طبی مشورہ و ادویات کے بارے میں رابطہ کر رہا ہوں۔')}`}
         target="_blank"
         rel="noreferrer"
         className="p-3.5 sm:p-4 rounded-full bg-[#25D366] text-white shadow-2xl hover:scale-110 transition-all whatsapp-pulse flex items-center justify-center"

@@ -1,5 +1,5 @@
 import React, { Component, ErrorInfo, ReactNode } from 'react';
-import { RefreshCw, AlertTriangle } from 'lucide-react';
+import { RefreshCw, AlertTriangle, RotateCcw } from 'lucide-react';
 
 interface Props {
   children: ReactNode;
@@ -24,24 +24,58 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error in Dawakhana App:', error, errorInfo);
   }
 
+  private handleReload = () => {
+    try {
+      window.location.reload();
+    } catch {
+      window.location.href = '/';
+    }
+  };
+
+  private handleResetCache = () => {
+    try {
+      localStorage.clear();
+      sessionStorage.clear();
+      if ('caches' in window) {
+        caches.keys().then((names) => {
+          names.forEach((name) => caches.delete(name));
+        });
+      }
+    } catch (e) {
+      console.warn(e);
+    }
+    window.location.href = '/';
+  };
+
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-emerald-50 text-emerald-950 text-center">
-          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mb-4 shadow-sm">
+        <div className="min-h-screen flex flex-col items-center justify-center p-6 bg-emerald-50 text-emerald-950 text-center font-sans">
+          <div className="w-16 h-16 rounded-full bg-amber-100 text-amber-700 flex items-center justify-center mb-4 shadow-sm border border-amber-300">
             <AlertTriangle className="w-8 h-8" />
           </div>
-          <h1 className="text-xl font-bold mb-2">الشہزاد دواخانہ — عارضی مسئلہ</h1>
-          <p className="text-sm text-slate-600 max-w-md mb-6">
-            صفحہ لوڈ کرنے میں عارضی دقت پیش آئی ہے۔ برائے مہربانی صفحہ ریفریش کریں۔
+          <h1 className="text-xl font-bold mb-2 text-slate-900">الشہزاد دواخانہ اینڈ ہربل کلینک</h1>
+          <p className="text-sm text-slate-600 max-w-md mb-6 leading-relaxed">
+            صفحہ لوڈ کرنے میں عارضی دقت پیش آئی ہے۔ آپ صفحہ ریفریش کر سکتے ہیں یا کیش ری سیٹ کر کے دوبارہ کھول سکتے ہیں۔
           </p>
-          <button
-            onClick={() => window.location.reload()}
-            className="px-6 py-3 rounded-xl bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:bg-emerald-700 transition-colors"
-          >
-            <RefreshCw className="w-4 h-4" />
-            <span>صفحہ ریفریش کریں (Reload App)</span>
-          </button>
+
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <button
+              onClick={this.handleReload}
+              className="px-5 py-2.5 rounded-xl bg-emerald-800 text-white font-bold text-xs flex items-center gap-2 shadow-md hover:bg-emerald-700 transition-all cursor-pointer"
+            >
+              <RefreshCw className="w-4 h-4" />
+              <span>صفحہ ریفریش کریں (Reload)</span>
+            </button>
+
+            <button
+              onClick={this.handleResetCache}
+              className="px-5 py-2.5 rounded-xl bg-amber-400 text-emerald-950 font-black text-xs flex items-center gap-2 shadow-md hover:bg-amber-300 transition-all border border-amber-500 cursor-pointer"
+            >
+              <RotateCcw className="w-4 h-4" />
+              <span>کیش صاف کر کے ری سیٹ کریں (Clear Cache)</span>
+            </button>
+          </div>
         </div>
       );
     }

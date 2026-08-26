@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { Product, CartItem } from '../types';
+import { CartItem, Product } from '../types';
 
 interface CartContextType {
   cart: CartItem[];
@@ -10,7 +10,7 @@ interface CartContextType {
   totalItems: number;
   totalPrice: number;
   isCartOpen: boolean;
-  setIsCartOpen: (open: boolean) => void;
+  setIsCartOpen: (isOpen: boolean) => void;
 }
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
@@ -18,7 +18,7 @@ const CartContext = createContext<CartContextType | undefined>(undefined);
 export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
-      const saved = localStorage.getItem('dawakhana_cart');
+      const saved = localStorage.getItem('app_cart');
       return saved ? JSON.parse(saved) : [];
     } catch {
       return [];
@@ -28,10 +28,13 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [isCartOpen, setIsCartOpen] = useState(false);
 
   useEffect(() => {
-    localStorage.setItem('dawakhana_cart', JSON.stringify(cart));
+    try {
+      localStorage.setItem('app_cart', JSON.stringify(cart));
+    } catch {}
   }, [cart]);
 
-  const addToCart = (product: Product, quantity: number = 1) => {
+  const addToCart = (product: Product, quantity = 1) => {
+    if (!product || !product.id) return;
     setCart((prev) => {
       const existing = prev.find((item) => item.product.id === product.id);
       if (existing) {
@@ -43,7 +46,6 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
       }
       return [...prev, { product, quantity }];
     });
-    setIsCartOpen(true);
   };
 
   const removeFromCart = (productId: string) => {
@@ -66,9 +68,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCart([]);
   };
 
-  const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
   const totalPrice = cart.reduce(
-    (sum, item) => sum + item.product.price * item.quantity,
+    (sum, item) => sum + ((item.product?.price || 0) * (item.quantity || 0)),
     0
   );
 
@@ -94,7 +96,17 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 export const useCart = (): CartContextType => {
   const context = useContext(CartContext);
   if (!context) {
-    throw new Error('useCart must be used within a CartProvider');
+    return {
+      cart: [],
+      addToCart: () => {},
+      removeFromCart: () => {},
+      updateQuantity: () => {},
+      clearCart: () => {},
+      totalItems: 0,
+      totalPrice: 0,
+      isCartOpen: false,
+      setIsCartOpen: () => {},
+    };
   }
   return context;
 };

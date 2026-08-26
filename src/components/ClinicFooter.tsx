@@ -119,34 +119,34 @@ export const ClinicFooter: React.FC = () => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>
-                  {isUrdu ? hakeemSettings.addressUr : hakeemSettings.addressEn}
+                  {isUrdu ? (hakeemSettings?.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ') : (hakeemSettings?.addressEn || 'Al-Shehzad Dawakhana, Gujranwala')}
                 </span>
               </div>
 
               <a
-                href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+                href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
                 className="flex items-center gap-2 text-amber-300 hover:text-amber-200 transition-colors font-black bg-emerald-900/80 p-2 rounded-xl border border-emerald-700"
               >
                 <Phone className="w-4 h-4 text-amber-400" />
-                <span>{t(`ڈائریکٹ فون: ${hakeemSettings.phone}`, `Phone: ${hakeemSettings.phone}`)}</span>
+                <span>{t(`ڈائریکٹ فون: ${hakeemSettings?.phone || '0300-6458169'}`, `Phone: ${hakeemSettings?.phone || '0300-6458169'}`)}</span>
               </a>
 
               <a
-                href={`https://wa.me/${hakeemSettings.whatsapp}`}
+                href={`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}`}
                 target="_blank"
                 rel="noreferrer"
                 className="flex items-center gap-2 text-emerald-300 hover:text-white transition-colors"
               >
                 <MessageSquare className="w-4 h-4 text-[#25D366]" />
-                <span>{t(`واٹس ایپ: ${hakeemSettings.phone}`, `WhatsApp: ${hakeemSettings.phone}`)}</span>
+                <span>{t(`واٹس ایپ: ${hakeemSettings?.phone || '0300-6458169'}`, `WhatsApp: ${hakeemSettings?.phone || '0300-6458169'}`)}</span>
               </a>
 
               <a
-                href={`mailto:${hakeemSettings.email}`}
+                href={`mailto:${hakeemSettings?.email || 'nawaznaji012@gmail.com'}`}
                 className="flex items-center gap-2 hover:text-white transition-colors break-all"
               >
                 <Mail className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>{hakeemSettings.email}</span>
+                <span>{hakeemSettings?.email || 'nawaznaji012@gmail.com'}</span>
               </a>
             </div>
           </div>

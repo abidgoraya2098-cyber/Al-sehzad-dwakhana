@@ -12,23 +12,31 @@ const LanguageContext = createContext<LanguageContextType | undefined>(undefined
 
 export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [language, setLanguageState] = useState<Language>(() => {
-    const saved = localStorage.getItem('app_language');
-    return (saved === 'en' || saved === 'ur') ? saved : 'ur';
+    try {
+      const saved = localStorage.getItem('app_language');
+      return (saved === 'en' || saved === 'ur') ? saved : 'ur';
+    } catch {
+      return 'ur';
+    }
   });
 
   const setLanguage = (lang: Language) => {
     setLanguageState(lang);
-    localStorage.setItem('app_language', lang);
+    try {
+      localStorage.setItem('app_language', lang);
+    } catch {}
   };
 
   useEffect(() => {
     const isRtl = language === 'ur';
-    document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
-    document.documentElement.setAttribute('lang', language);
+    if (typeof document !== 'undefined') {
+      document.documentElement.setAttribute('dir', isRtl ? 'rtl' : 'ltr');
+      document.documentElement.setAttribute('lang', language);
+    }
   }, [language]);
 
   const isUrdu = language === 'ur';
-  const t = (ur: string, en: string) => (isUrdu ? ur : en);
+  const t = (ur: string, en: string) => (isUrdu ? ur : (en || ur));
 
   return (
     <LanguageContext.Provider value={{ language, setLanguage, isUrdu, t }}>
@@ -40,7 +48,12 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
 export const useLanguage = (): LanguageContextType => {
   const context = useContext(LanguageContext);
   if (!context) {
-    throw new Error('useLanguage must be used within a LanguageProvider');
+    return {
+      language: 'ur',
+      setLanguage: () => {},
+      isUrdu: true,
+      t: (ur: string) => ur,
+    };
   }
   return context;
 };

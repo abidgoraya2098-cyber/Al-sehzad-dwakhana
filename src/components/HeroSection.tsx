@@ -125,7 +125,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           <div className="pt-3 sm:pt-4 flex flex-wrap items-center justify-center gap-2 sm:gap-3 w-full">
             {/* Live Phone Call */}
             <a
-              href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+              href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
               className="w-full sm:w-auto px-4 sm:px-5 py-3 sm:py-3.5 bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 border border-amber-500"
             >
               <Phone className="w-4 h-4 fill-emerald-950" />
