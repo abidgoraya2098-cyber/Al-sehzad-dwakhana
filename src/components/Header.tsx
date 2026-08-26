@@ -162,16 +162,20 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           {/* PWA Install Button */}
-          {canInstallPwa && (
-            <button
-              onClick={handleInstallPwa}
-              className="hidden lg:flex items-center gap-1 px-2.5 py-1.5 text-xs font-bold text-emerald-900 bg-emerald-100 hover:bg-emerald-200 rounded-xl border border-emerald-300 transition-all"
-              title={t('ایپ انسٹال کریں', 'Install App')}
-            >
-              <Download className="w-3.5 h-3.5" />
-              <span>{t('انسٹال', 'Install')}</span>
-            </button>
-          )}
+          <button
+            onClick={() => {
+              if ((window as any).deferredPrompt || (window as any).deferredPwaPrompt) {
+                handleInstallPwa();
+              } else {
+                window.dispatchEvent(new CustomEvent('open-pwa-install'));
+              }
+            }}
+            className="flex items-center gap-1 px-2 sm:px-2.5 py-1.5 text-xs font-bold text-emerald-950 bg-emerald-100 hover:bg-emerald-200 rounded-xl border border-emerald-300 transition-all shadow-xs"
+            title={t('الشہزاد دواخانہ ایپ انسٹال کریں', 'Install Official App')}
+          >
+            <Download className="w-3.5 h-3.5 text-emerald-800" />
+            <span className="hidden sm:inline">{t('انسٹال', 'Install')}</span>
+          </button>
 
           {/* Language Toggle */}
           <button
