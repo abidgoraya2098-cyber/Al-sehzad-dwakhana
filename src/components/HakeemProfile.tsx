@@ -1,14 +1,12 @@
 import React from 'react';
 import {
-  Award,
   ShieldCheck,
   Phone,
   Calendar,
-  Clock,
   Sparkles,
   CheckCircle2,
   GraduationCap,
-  HeartPulse,
+  Mail,
   MessageSquare
 } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
@@ -35,6 +33,11 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
     { ur: 'خواتین و مردانہ پوشیدہ امراض', en: 'Specialized Metabolic & Reproductive Health' },
   ];
 
+  const profilePhoto = hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg';
+  const emailAddress = hakeemSettings.email || 'nawaznaji012@gmail.com';
+  const mobileNumber = hakeemSettings.phone || '0300-6458169';
+  const whatsappNumber = hakeemSettings.whatsapp || '923006458169';
+
   return (
     <section id="hakeem-profile" className="py-14 sm:py-20 bg-white border-b border-emerald-100 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -45,7 +48,7 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
             <span>{t('معالج و سرپرستِ اعلیٰ کا تعارف', 'Chief Physician & Herbal Specialist')}</span>
           </div>
           <h2 className="text-2xl sm:text-3xl md:text-4xl font-black text-slate-950 tracking-tight">
-            {t('حکیم صاحب کی مکمل پروفائل و اسناد', 'Chief Hakeem Profile & Qualifications')}
+            {t('حکیم صاحب کی مکمل پروفائل و رابطہ تفصیلات', 'Chief Hakeem Profile & Contact Details')}
           </h2>
           <p className="text-slate-700 text-xs sm:text-sm md:text-base mt-2 font-semibold">
             {t(
@@ -61,17 +64,18 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
           <div className="absolute top-0 right-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none"></div>
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-center relative z-10">
-            {/* Hakeem Avatar & Credentials (4 cols) */}
-            <div className="lg:col-span-4 flex flex-col items-center text-center space-y-4">
+            {/* Hakeem Avatar & Direct Contact Info (5 cols) */}
+            <div className="lg:col-span-5 flex flex-col items-center text-center space-y-4">
+              {/* Circular Profile Picture with Royal Ring */}
               <div className="relative">
-                <div className="w-36 h-36 sm:w-48 sm:h-48 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 shadow-2xl overflow-hidden">
+                <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 shadow-2xl overflow-hidden">
                   <img
-                    src={hakeemSettings.avatarUrl}
-                    alt={hakeemSettings.nameEn}
+                    src={profilePhoto}
+                    alt="Hakim Muhammad Nawaz Ahmad"
                     className="w-full h-full object-cover rounded-full border-4 border-emerald-950 bg-slate-800"
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
-                      target.src = 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&w=600&q=80';
+                      target.src = '/hakeem-nawaz.jpg';
                     }}
                   />
                 </div>
@@ -81,30 +85,69 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
                 </div>
               </div>
 
-              <div>
-                <h3 className="text-xl sm:text-2xl md:text-3xl font-black text-amber-300">
+              {/* Name & Titles */}
+              <div className="space-y-1">
+                <h3 className="text-2xl sm:text-3xl font-black text-amber-300">
                   {isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}
                 </h3>
-                <span className="text-xs sm:text-sm font-bold text-emerald-200 block mt-1">
+                <span className="text-xs sm:text-sm font-bold text-emerald-200 block">
                   {isUrdu ? hakeemSettings.degreeUr : hakeemSettings.degreeEn}
                 </span>
-                <span className="text-[11px] text-amber-200/90 block mt-0.5 font-mono">
+                <span className="text-[11px] text-amber-200/90 block font-mono">
                   {t('رجسٹریشن نمبر:', 'Reg No:')} {hakeemSettings.regNo} ({t('نیشنل کونسل فار طب', 'National Council for Tibb')})
                 </span>
               </div>
 
-              <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                <span className="px-3 py-1 bg-emerald-900/90 rounded-full border border-emerald-700 text-[11px] font-bold text-emerald-100">
-                  ⭐ {hakeemSettings.experienceYears} {t('سالہ کلینیکل تجربہ', 'Years Clinical Exp')}
-                </span>
-                <span className="px-3 py-1 bg-emerald-900/90 rounded-full border border-emerald-700 text-[11px] font-bold text-amber-300">
-                  🌿 50,000+ {t('شفایاب مریض', 'Treated Patients')}
-                </span>
+              {/* Clean Contact Details Box */}
+              <div className="w-full bg-emerald-900/90 rounded-2xl p-4 border border-emerald-700/80 text-left rtl:text-right space-y-2.5 text-xs">
+                {/* Mobile Number */}
+                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="font-bold text-slate-200">{t('موبائل نمبر:', 'Mobile:')}</span>
+                  </div>
+                  <a
+                    href={`tel:${mobileNumber.replace(/\D/g, '')}`}
+                    className="font-mono font-black text-amber-300 hover:text-amber-200"
+                  >
+                    {mobileNumber}
+                  </a>
+                </div>
+
+                {/* WhatsApp Number */}
+                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <MessageSquare className="w-4 h-4 text-[#25D366] shrink-0" />
+                    <span className="font-bold text-slate-200">{t('واٹس ایپ:', 'WhatsApp:')}</span>
+                  </div>
+                  <a
+                    href={`https://wa.me/${whatsappNumber}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="font-mono font-black text-[#25D366] hover:text-emerald-400"
+                  >
+                    0300-6458169
+                  </a>
+                </div>
+
+                {/* Email Address */}
+                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <Mail className="w-4 h-4 text-teal-400 shrink-0" />
+                    <span className="font-bold text-slate-200">{t('ای میل:', 'Email:')}</span>
+                  </div>
+                  <a
+                    href={`mailto:${emailAddress}`}
+                    className="font-mono text-emerald-200 hover:text-white truncate max-w-[180px]"
+                  >
+                    {emailAddress}
+                  </a>
+                </div>
               </div>
             </div>
 
-            {/* Detailed Bio & Specializations (8 cols) */}
-            <div className="lg:col-span-8 space-y-5">
+            {/* Detailed Bio & Specializations (7 cols) */}
+            <div className="lg:col-span-7 space-y-5">
               {/* Bio Statement */}
               <div className="bg-emerald-900/60 p-4 sm:p-5 rounded-2xl border border-emerald-700/60 space-y-2">
                 <h4 className="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-2">
@@ -141,11 +184,11 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
               <div className="pt-2 flex flex-wrap items-center gap-2.5">
                 {/* Live Call Button */}
                 <a
-                  href={`tel:${hakeemSettings.phone.replace(/\D/g, '')}`}
+                  href={`tel:${mobileNumber.replace(/\D/g, '')}`}
                   className="w-full sm:w-auto px-4 py-3 bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2"
                 >
                   <Phone className="w-4 h-4 fill-emerald-950" />
-                  <span>{t(`حکیم صاحب کو لائیو کال کریں (${hakeemSettings.phone})`, `Call Hakim (${hakeemSettings.phone})`)}</span>
+                  <span>{t(`حکیم صاحب کو لائیو کال کریں (${mobileNumber})`, `Call Hakim (${mobileNumber})`)}</span>
                 </a>
 
                 {/* Appointment Booking */}
