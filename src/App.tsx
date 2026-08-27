@@ -24,6 +24,7 @@ import { AdminInboxModal } from './components/AdminInboxModal';
 import { NotificationModal } from './components/NotificationModal';
 import { SplashScreen } from './components/SplashScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { SectionErrorBoundary } from './components/SectionErrorBoundary';
 import { Product } from './types';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -65,63 +66,87 @@ const MainAppContent: React.FC = () => {
       )}
 
       {/* Header Navigation */}
-      <Header
-        onOpenConsultation={() => setIsConsultationOpen(true)}
-        onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
-        onOpenAdminLogin={() => setIsAdminLoginOpen(true)}
-        onOpenAdminInbox={() => setIsAdminInboxOpen(true)}
-      />
+      <SectionErrorBoundary sectionName="Header">
+        <Header
+          onOpenConsultation={() => setIsConsultationOpen(true)}
+          onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
+          onOpenAdminLogin={() => setIsAdminLoginOpen(true)}
+          onOpenAdminInbox={() => setIsAdminInboxOpen(true)}
+        />
+      </SectionErrorBoundary>
 
       <main className="flex-1">
         {/* 1. Hero Section */}
-        <HeroSection
-          onSearch={(q) => setSearchQuery(q)}
-          onOpenConsultation={() => setIsConsultationOpen(true)}
-          onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
-          onStartQuiz={handleStartMizajQuiz}
-        />
+        <SectionErrorBoundary sectionName="HeroSection">
+          <HeroSection
+            onSearch={(q) => setSearchQuery(q)}
+            onOpenConsultation={() => setIsConsultationOpen(true)}
+            onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
+            onStartQuiz={handleStartMizajQuiz}
+          />
+        </SectionErrorBoundary>
 
         {/* 2. Chief Hakeem Profile & Credentials */}
-        <HakeemProfile
-          onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
-          onOpenConsultation={() => setIsConsultationOpen(true)}
-        />
+        <SectionErrorBoundary sectionName="HakeemProfile">
+          <HakeemProfile
+            onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
+            onOpenConsultation={() => setIsConsultationOpen(true)}
+          />
+        </SectionErrorBoundary>
 
         {/* 3. Hijama & Cupping Therapy Center */}
-        <HijamaServices
-          onBookHijama={() => handleOpenAppointmentModal('hijama')}
-        />
+        <SectionErrorBoundary sectionName="HijamaServices">
+          <HijamaServices
+            onBookHijama={() => handleOpenAppointmentModal('hijama')}
+          />
+        </SectionErrorBoundary>
 
         {/* 4. Products & Herbal Pharmacy Catalog */}
-        <ProductCatalog
-          searchQuery={searchQuery}
-          onSelectProduct={(p) => setSelectedProduct(p)}
-        />
+        <SectionErrorBoundary sectionName="ProductCatalog">
+          <ProductCatalog
+            searchQuery={searchQuery}
+            onSelectProduct={(p) => setSelectedProduct(p)}
+          />
+        </SectionErrorBoundary>
 
         {/* 5. Tibbi Mizaj Diagnostic Quiz */}
-        <MizajQuiz onSelectProduct={(p) => setSelectedProduct(p)} />
+        <SectionErrorBoundary sectionName="MizajQuiz">
+          <MizajQuiz onSelectProduct={(p) => setSelectedProduct(p)} />
+        </SectionErrorBoundary>
 
         {/* 6. Traditional Desi Totkay & Home Remedies */}
-        <RemediesSection onSelectProduct={(p) => setSelectedProduct(p)} />
+        <SectionErrorBoundary sectionName="RemediesSection">
+          <RemediesSection onSelectProduct={(p) => setSelectedProduct(p)} />
+        </SectionErrorBoundary>
 
         {/* 7. Treatment Course Duration & Cost Estimator */}
-        <CourseEstimator />
+        <SectionErrorBoundary sectionName="CourseEstimator">
+          <CourseEstimator />
+        </SectionErrorBoundary>
 
         {/* 8. Patient Feedback & 5-Star Reviews */}
-        <Feedback />
+        <SectionErrorBoundary sectionName="Feedback">
+          <Feedback />
+        </SectionErrorBoundary>
 
         {/* 9. Lead Developer Profile */}
-        <DeveloperProfile />
+        <SectionErrorBoundary sectionName="DeveloperProfile">
+          <DeveloperProfile />
+        </SectionErrorBoundary>
       </main>
 
       {/* Footer */}
-      <ClinicFooter />
+      <SectionErrorBoundary sectionName="ClinicFooter">
+        <ClinicFooter />
+      </SectionErrorBoundary>
 
       {/* Floating Action Bar */}
-      <FloatingActionBar
-        onOpenConsultation={() => setIsConsultationOpen(true)}
-        onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
-      />
+      <SectionErrorBoundary sectionName="FloatingActionBar">
+        <FloatingActionBar
+          onOpenConsultation={() => setIsConsultationOpen(true)}
+          onOpenAppointment={() => handleOpenAppointmentModal('hakeem_checkup')}
+        />
+      </SectionErrorBoundary>
 
       {/* Modals & Drawers */}
       <ProductDetailModal
