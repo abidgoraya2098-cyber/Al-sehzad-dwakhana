@@ -69,11 +69,12 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
             <div className="lg:col-span-5 flex flex-col items-center text-center space-y-4">
               {/* Circular Profile Picture with Royal Ring */}
               <div className="relative">
-                <div className="w-44 h-44 sm:w-56 sm:h-56 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 shadow-2xl overflow-hidden">
+                <div className="w-48 h-48 sm:w-60 sm:h-60 rounded-full p-2 bg-gradient-to-tr from-amber-400 via-amber-200 to-amber-500 shadow-2xl overflow-hidden">
                   <img
                     src={profilePhoto}
                     alt="Hakim Muhammad Nawaz Ahmad"
-                    className="w-full h-full object-cover rounded-full border-4 border-emerald-950 bg-slate-800"
+                    className="w-full h-full object-cover rounded-full border-4 border-emerald-950 bg-slate-800 transition-transform duration-300 hover:scale-105"
+                    style={{ objectPosition: 'center 12%' }}
                     onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.src = '/hakeem-nawaz.jpg';
