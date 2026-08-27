@@ -25,8 +25,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   searchQuery,
 }) => {
   const { isUrdu, t } = useLanguage();
-  const { addToCart } = useCart();
-  const { hakeemSettings } = useAdmin();
+  const { hakeemSettings, products } = useAdmin();
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [sortBy, setSortBy] = useState<'featured' | 'price_low' | 'price_high' | 'rating'>('featured');
 
@@ -41,7 +40,8 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
   ];
 
   const filteredProducts = useMemo(() => {
-    return productsData
+    const list = Array.isArray(products) && products.length > 0 ? products : productsData;
+    return list
       .filter((product) => {
         const matchesCategory =
           selectedCategory === 'all' || product.category === selectedCategory;
