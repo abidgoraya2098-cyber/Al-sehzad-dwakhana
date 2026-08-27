@@ -14,7 +14,7 @@ export const DawakhanaLogo: React.FC<DawakhanaLogoProps> = ({
   textColor = 'text-slate-900',
 }) => {
   return (
-    <div className={`flex items-center gap-3 select-none ${className}`}>
+    <div className={`flex items-center gap-1.5 sm:gap-2.5 select-none shrink-0 ${className}`}>
       <div
         className="relative flex items-center justify-center shrink-0 rounded-full shadow-md overflow-hidden bg-emerald-900 border-2 border-amber-400 p-0.5"
         style={{ width: size, height: size }}
@@ -24,7 +24,6 @@ export const DawakhanaLogo: React.FC<DawakhanaLogoProps> = ({
           alt="Al-Shehzad Dawakhana Logo"
           className="w-full h-full object-contain transform hover:scale-105 transition-transform duration-300"
           onError={(e) => {
-            // Fallback if SVG fails to load
             const target = e.target as HTMLImageElement;
             target.src = '/logo.png';
           }}
@@ -32,11 +31,11 @@ export const DawakhanaLogo: React.FC<DawakhanaLogoProps> = ({
       </div>
 
       {showText && (
-        <div className="flex flex-col text-right rtl:text-right ltr:text-left leading-tight">
-          <span className="font-bold text-lg md:text-xl tracking-tight text-emerald-950">
+        <div className="flex flex-col text-right rtl:text-right ltr:text-left leading-tight shrink-0">
+          <span className="font-bold text-sm sm:text-base md:text-xl tracking-tight text-emerald-950 whitespace-nowrap">
             الشہزاد دواخانہ
           </span>
-          <span className="text-[11px] md:text-xs font-semibold text-amber-700 tracking-wide">
+          <span className="text-[9px] sm:text-[10px] md:text-xs font-semibold text-amber-700 tracking-wide whitespace-nowrap hidden sm:block">
             AL-SHEHZAD DAWAKHANA
           </span>
         </div>

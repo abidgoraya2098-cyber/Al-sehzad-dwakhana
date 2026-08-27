@@ -142,11 +142,11 @@ export const Header: React.FC<HeaderProps> = ({
         </nav>
 
         {/* Right Action Icons */}
-        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-2 shrink-0 flex-nowrap">
           {/* Direct Live Call Button */}
           <a
             href={`tel:${(hakeemSettings?.phone || '0300-6458169').replace(/\D/g, '') || '03006458169'}`}
-            className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500"
+            className="flex items-center gap-1 px-2 sm:px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-emerald-950 font-black text-xs shadow-sm transition-all border border-amber-500 shrink-0"
             title={t('حکیم صاحب کو لائیو کال کریں', 'Direct Phone Call')}
           >
             <Phone className="w-3.5 h-3.5 fill-emerald-950" />
@@ -156,7 +156,7 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Appointment Booking Button */}
           <button
             onClick={onOpenAppointment}
-            className="hidden sm:flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all border border-emerald-600"
+            className="hidden md:flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition-all border border-emerald-600 shrink-0"
           >
             <Calendar className="w-3.5 h-3.5 text-amber-300" />
             <span>{t('وقت لیں', 'Book Slot')}</span>
@@ -168,16 +168,16 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Language Toggle */}
           <button
             onClick={() => setLanguage(language === 'ur' ? 'en' : 'ur')}
-            className="flex items-center gap-1 px-2 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors"
+            className="flex items-center gap-1 px-1.5 sm:px-2 py-1.5 rounded-xl border border-slate-300 text-xs font-bold text-slate-800 hover:bg-slate-100 transition-colors shrink-0"
           >
             <Languages className="w-3.5 h-3.5 text-emerald-700" />
-            <span>{language === 'ur' ? 'EN' : 'اردو'}</span>
+            <span className="text-[11px] sm:text-xs">{language === 'ur' ? 'EN' : 'اردو'}</span>
           </button>
 
           {/* Notification Bell */}
           <button
             onClick={() => setIsModalOpen(true)}
-            className="relative p-1.5 sm:p-2 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors"
+            className="relative p-1.5 sm:p-2 rounded-xl text-slate-700 hover:text-emerald-800 hover:bg-emerald-50 transition-colors shrink-0"
           >
             <Bell className="w-4 h-4 sm:w-5 sm:h-5" />
             {unreadCount > 0 && (
@@ -190,10 +190,10 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Cart Trigger */}
           <button
             onClick={() => setIsCartOpen(true)}
-            className="relative p-1.5 sm:p-2 rounded-xl bg-emerald-800 text-white hover:bg-emerald-700 shadow-sm transition-all flex items-center gap-1 px-2.5 sm:px-3"
+            className="relative p-1.5 sm:p-2 rounded-xl bg-emerald-800 text-white hover:bg-emerald-700 shadow-sm transition-all flex items-center gap-1 px-2 sm:px-3 shrink-0"
           >
             <ShoppingBag className="w-4 h-4 text-amber-300" />
-            <span className="text-xs font-black hidden md:inline">{t('کارٹ', 'Cart')}</span>
+            <span className="text-xs font-black hidden sm:inline">{t('کارٹ', 'Cart')}</span>
             {totalItems > 0 && (
               <span className="bg-amber-400 text-emerald-950 text-[10px] font-black px-1.5 py-0.2 rounded-full">
                 {totalItems}
@@ -205,15 +205,16 @@ export const Header: React.FC<HeaderProps> = ({
           {isAdminLoggedIn ? (
             <button
               onClick={onOpenAdminInbox}
-              className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300"
+              className="p-1.5 sm:p-2 rounded-xl bg-amber-100 text-amber-900 font-bold text-xs flex items-center gap-1 border border-amber-300 shrink-0"
             >
               <ShieldCheck className="w-4 h-4 text-amber-700" />
-              <span className="hidden sm:inline">Admin</span>
+              <span className="hidden md:inline">Admin</span>
             </button>
           ) : (
             <button
               onClick={onOpenAdminLogin}
-              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-700 transition-colors"
+              className="p-1.5 sm:p-2 rounded-xl text-slate-400 hover:text-slate-700 transition-colors shrink-0"
+              title="Admin Portal"
             >
               <Lock className="w-4 h-4" />
             </button>
@@ -222,9 +223,9 @@ export const Header: React.FC<HeaderProps> = ({
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors"
+            className="xl:hidden p-1.5 sm:p-2 rounded-xl text-slate-800 hover:bg-slate-100 transition-colors shrink-0"
           >
-            {mobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+            {mobileMenuOpen ? <X className="w-5 h-5 sm:w-6 sm:h-6" /> : <Menu className="w-5 h-5 sm:w-6 sm:h-6" />}
           </button>
         </div>
       </div>
