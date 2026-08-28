@@ -17,6 +17,7 @@ export interface HakeemSettings {
   addressEn: string;
   clinicTimingsUr: string;
   clinicTimingsEn: string;
+  clinicStatusMode?: 'auto' | 'open' | 'closed';
 }
 
 export interface Product {

@@ -9,6 +9,7 @@ interface AdminContextType {
   updateAdminPassword: (newPass: string) => boolean;
   hakeemSettings: HakeemSettings;
   updateHakeemSettings: (newSettings: Partial<HakeemSettings>) => void;
+  setClinicStatusMode: (mode: 'auto' | 'open' | 'closed') => void;
   consultations: ConsultationSubmission[];
   addConsultation: (consultation: Omit<ConsultationSubmission, 'id' | 'timestamp' | 'status'>) => void;
   updateConsultationStatus: (id: string, status: 'new' | 'in_progress' | 'completed') => void;
@@ -39,6 +40,7 @@ export const defaultHakeemSettings: HakeemSettings = {
   addressEn: 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan',
   clinicTimingsUr: 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے (جمعہ تعطیل)',
   clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
+  clinicStatusMode: 'auto',
 };
 
 const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v6';
@@ -78,6 +80,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
             phone: parsed.phone || '0300-6458169',
             whatsapp: parsed.whatsapp || '923006458169',
             email: parsed.email || 'nawaznaji012@gmail.com',
+            clinicStatusMode: parsed.clinicStatusMode || 'auto',
           };
         }
       }
@@ -175,8 +178,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         whatsapp: newSettings.whatsapp || (cleanWhatsapp.startsWith('92') ? cleanWhatsapp : `92${cleanWhatsapp.replace(/^0+/, '')}`),
         email: newSettings.email || prev.email || 'nawaznaji012@gmail.com',
         avatarUrl: newSettings.avatarUrl || prev.avatarUrl || '/hakeem-nawaz.jpg',
+        clinicStatusMode: newSettings.clinicStatusMode || prev.clinicStatusMode || 'auto',
       };
     });
+  };
+
+  const setClinicStatusMode = (mode: 'auto' | 'open' | 'closed') => {
+    updateHakeemSettings({ clinicStatusMode: mode });
   };
 
   const addConsultation = (consultation: Omit<ConsultationSubmission, 'id' | 'timestamp' | 'status'>) => {
@@ -240,6 +248,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         updateAdminPassword,
         hakeemSettings,
         updateHakeemSettings,
+        setClinicStatusMode,
         consultations,
         addConsultation,
         updateConsultationStatus,
@@ -268,6 +277,7 @@ export const useAdmin = () => {
       updateAdminPassword: () => false,
       hakeemSettings: defaultHakeemSettings,
       updateHakeemSettings: () => {},
+      setClinicStatusMode: () => {},
       consultations: [],
       addConsultation: () => {},
       updateConsultationStatus: () => {},

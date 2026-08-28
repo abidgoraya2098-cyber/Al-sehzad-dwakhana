@@ -24,8 +24,8 @@ import {
   Check,
   RotateCcw,
   Sparkles,
-  TrendingUp,
-  TrendingDown
+  ToggleLeft,
+  ToggleRight
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -49,6 +49,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     logoutAdmin,
     hakeemSettings,
     updateHakeemSettings,
+    setClinicStatusMode,
     updateAdminPassword,
     products,
     addProduct,
@@ -75,6 +76,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [email, setEmail] = useState(hakeemSettings?.email || 'nawaznaji012@gmail.com');
   const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
   const [avatarUrl, setAvatarUrl] = useState(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
+  const [clinicStatusModeState, setClinicStatusModeState] = useState<'auto' | 'open' | 'closed'>(hakeemSettings?.clinicStatusMode || 'auto');
 
   // Medicine Management State
   const [medicineSearch, setMedicineSearch] = useState('');
@@ -110,6 +112,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       setEmail(hakeemSettings.email || 'nawaznaji012@gmail.com');
       setAddressUr(hakeemSettings.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
       setAvatarUrl(hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg');
+      setClinicStatusModeState(hakeemSettings.clinicStatusMode || 'auto');
     }
   }, [isOpen, hakeemSettings]);
 
@@ -147,6 +150,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       email,
       addressUr,
       avatarUrl,
+      clinicStatusMode: clinicStatusModeState,
     });
     showToast(t('حکیم صاحب کی پروفائل و کلینک سیٹنگز کامیابی سے محفوظ ہو گئیں!', 'Hakeem Profile & Clinic Settings Updated Successfully!'));
   };
@@ -289,7 +293,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     <div className="fixed inset-0 z-50 overflow-y-auto bg-black/60 backdrop-blur-xs flex items-center justify-center p-2 sm:p-4 animate-fadeIn">
       <div className="bg-white w-full max-w-5xl rounded-3xl overflow-hidden shadow-2xl border-2 border-amber-400 max-h-[94vh] flex flex-col relative">
         {/* Header */}
-        <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white flex flex-wrap items-center justify-between gap-3">
+        <div className="p-4 sm:p-5 bg-gradient-to-r from-emerald-950 via-emerald-900 to-teal-950 text-white flex flex-wrap items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-400 text-emerald-950 flex items-center justify-center font-black">
               <ShieldCheck className="w-6 h-6" />
@@ -320,6 +324,67 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
               className="p-1.5 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer"
             >
               <X className="w-5 h-5" />
+            </button>
+          </div>
+        </div>
+
+        {/* Quick Clinic Open / Closed Status Bar */}
+        <div className="bg-emerald-950 px-4 py-2.5 text-white flex flex-wrap items-center justify-between gap-2 border-b border-emerald-800 text-xs shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="font-bold text-amber-300">
+              {t('حکیم صاحب کلینک اسٹیٹس کنٹرول:', 'Clinic Status Control:')}
+            </span>
+            <span className="text-[11px] text-emerald-200">
+              {hakeemSettings?.clinicStatusMode === 'open' && t('🟢 اس وقت کھلا ہے (Open)', '🟢 Open')}
+              {hakeemSettings?.clinicStatusMode === 'closed' && t('🔴 اس وقت بند ہے / آف لائن دستیاب (Closed / Offline)', '🔴 Closed (Offline Available)')}
+              {(hakeemSettings?.clinicStatusMode === 'auto' || !hakeemSettings?.clinicStatusMode) && t('⏰ خودکار ٹائمنگ شیڈول (Auto Schedule)', '⏰ Auto Timing')}
+            </span>
+          </div>
+
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => {
+                setClinicStatusMode('open');
+                setClinicStatusModeState('open');
+                showToast(t('کلینک کا اسٹیٹس "کھلا ہے (Open)" سیٹ کر دیا گیا ہے!', 'Clinic status set to OPEN!'));
+              }}
+              className={`px-3 py-1 rounded-lg font-black text-xs transition-all flex items-center gap-1 cursor-pointer ${
+                hakeemSettings?.clinicStatusMode === 'open'
+                  ? 'bg-emerald-500 text-white shadow-xs'
+                  : 'bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 border border-emerald-700'
+              }`}
+            >
+              <span>🟢 {t('کلینک کھلا ہے (Open)', 'Open')}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setClinicStatusMode('closed');
+                setClinicStatusModeState('closed');
+                showToast(t('کلینک کا اسٹیٹس "بند ہے / آف لائن دستیاب" سیٹ کر دیا گیا ہے!', 'Clinic status set to CLOSED / Offline!'));
+              }}
+              className={`px-3 py-1 rounded-lg font-black text-xs transition-all flex items-center gap-1 cursor-pointer ${
+                hakeemSettings?.clinicStatusMode === 'closed'
+                  ? 'bg-red-500 text-white shadow-xs'
+                  : 'bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 border border-emerald-700'
+              }`}
+            >
+              <span>🔴 {t('کلینک بند ہے (Offline)', 'Closed')}</span>
+            </button>
+
+            <button
+              onClick={() => {
+                setClinicStatusMode('auto');
+                setClinicStatusModeState('auto');
+                showToast(t('کلینک اسٹیٹس خودکار ٹائمنگ شیڈول پر سیٹ کر دیا گیا ہے!', 'Clinic status set to Auto Schedule!'));
+              }}
+              className={`px-3 py-1 rounded-lg font-black text-xs transition-all flex items-center gap-1 cursor-pointer ${
+                hakeemSettings?.clinicStatusMode === 'auto' || !hakeemSettings?.clinicStatusMode
+                  ? 'bg-amber-400 text-emerald-950 shadow-xs'
+                  : 'bg-emerald-900/80 hover:bg-emerald-800 text-emerald-200 border border-emerald-700'
+              }`}
+            >
+              <span>⏰ {t('خودکار شیڈول (Auto)', 'Auto')}</span>
             </button>
           </div>
         </div>
@@ -694,8 +759,52 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                 {t('حکیم صاحب و کلینک پروفائل سیٹنگز', 'Hakeem & Clinic Profile Information')}
               </h3>
               <p className="text-xs text-slate-500 font-medium">
-                {t('یہاں سے آپ اپنا نام، تصویر، اسناد، کلینک کا پتہ اور رابطہ نمبرز لائیو اپ ڈیٹ کر سکتے ہیں۔', 'Update personal details, portrait image, degrees, address, and live contacts.')}
+                {t('یہاں سے آپ اپنا نام، تصویر، اسناد، کلینک کا پتہ، رابطہ نمبرز اور کلینک کی دستیابی لائیو اپ ڈیٹ کر سکتے ہیں۔', 'Update personal details, portrait image, degrees, address, live contacts, and clinic open/closed status.')}
               </p>
+            </div>
+
+            {/* Clinic Open / Closed Status Selector */}
+            <div className="bg-emerald-50 p-4 rounded-2xl border-2 border-emerald-300 space-y-2">
+              <label className="text-xs font-black text-emerald-950 block">
+                {t('کلینک دستیابی کنٹرول (جب آپ کلینک میں موجود نہ ہوں تو آف لائن سیٹ کریں):', 'Clinic Availability Control (Set to Closed when away):')}
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setClinicStatusModeState('open')}
+                  className={`p-3 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                    clinicStatusModeState === 'open'
+                      ? 'bg-emerald-600 text-white border-emerald-700 shadow-sm'
+                      : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <span>🟢 {t('ہمیشہ کھلا رکھیں (Open)', 'Always Open')}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setClinicStatusModeState('closed')}
+                  className={`p-3 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                    clinicStatusModeState === 'closed'
+                      ? 'bg-red-600 text-white border-red-700 shadow-sm'
+                      : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <span>🔴 {t('کلینک بند رکھیں (Offline)', 'Closed / Offline')}</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setClinicStatusModeState('auto')}
+                  className={`p-3 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-2 cursor-pointer transition-all ${
+                    clinicStatusModeState === 'auto'
+                      ? 'bg-amber-400 text-emerald-950 border-amber-500 shadow-sm'
+                      : 'bg-white text-slate-800 border-slate-200 hover:bg-slate-100'
+                  }`}
+                >
+                  <span>⏰ {t('خودکار ٹائمنگ شیڈول (Auto)', 'Auto Timing')}</span>
+                </button>
+              </div>
             </div>
 
             {/* Avatar Upload Preview */}

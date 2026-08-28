@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Clock, CheckCircle2, AlertCircle } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
+import { useAdmin } from '../context/AdminContext';
 
 export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className = '' }) => {
   const { isUrdu, t } = useLanguage();
-  const [isOpen, setIsOpen] = useState(false);
+  const { hakeemSettings } = useAdmin();
+  const [isAutoOpen, setIsAutoOpen] = useState(false);
   const [currentTimeText, setCurrentTimeText] = useState('');
 
   useEffect(() => {
@@ -25,7 +27,7 @@ export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className 
 
       // Friday is closed (except online)
       if (day === 5) {
-        setIsOpen(false);
+        setIsAutoOpen(false);
         return;
       }
 
@@ -33,7 +35,7 @@ export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className 
       const isMorningShift = currentMinutes >= 540 && currentMinutes <= 810;
       const isEveningShift = currentMinutes >= 990 && currentMinutes <= 1350;
 
-      setIsOpen(isMorningShift || isEveningShift);
+      setIsAutoOpen(isMorningShift || isEveningShift);
     };
 
     checkStatus();
@@ -41,10 +43,14 @@ export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className 
     return () => clearInterval(interval);
   }, []);
 
+  // Determine effective status based on manual override vs auto mode
+  const mode = hakeemSettings?.clinicStatusMode || 'auto';
+  const effectiveIsOpen = mode === 'open' ? true : mode === 'closed' ? false : isAutoOpen;
+
   return (
     <div
       className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-black shadow-xs select-none border transition-all ${
-        isOpen
+        effectiveIsOpen
           ? 'bg-emerald-100 text-emerald-950 border-emerald-400'
           : 'bg-amber-100 text-amber-950 border-amber-400'
       } ${className}`}
@@ -52,20 +58,20 @@ export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className 
       <span className="relative flex h-2.5 w-2.5">
         <span
           className={`animate-ping absolute inline-flex h-full w-full rounded-full opacity-75 ${
-            isOpen ? 'bg-emerald-500' : 'bg-amber-500'
+            effectiveIsOpen ? 'bg-emerald-500' : 'bg-amber-500'
           }`}
         ></span>
         <span
           className={`relative inline-flex rounded-full h-2.5 w-2.5 ${
-            isOpen ? 'bg-emerald-600' : 'bg-amber-600'
+            effectiveIsOpen ? 'bg-emerald-600' : 'bg-amber-600'
           }`}
         ></span>
       </span>
 
       <span>
-        {isOpen
+        {effectiveIsOpen
           ? t('🟢 کلینک اس وقت کھلا ہے (اوپن)', '🟢 Clinic is OPEN Now')
-          : t('🟡 کلینک فی الوقت بند ہے (آن لائن دستیاب)', '🟡 Clinic Closed (Online Available)')}
+          : t('🔴 کلینک فی الوقت بند ہے (آن لائن دستیاب)', '🔴 Clinic Closed (Online Available)')}
       </span>
     </div>
   );
