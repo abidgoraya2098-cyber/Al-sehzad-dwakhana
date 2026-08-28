@@ -45,10 +45,10 @@ export const DeveloperProfile: React.FC = () => {
           <div className="flex items-center gap-2 shrink-0">
             <a
               href="tel:03004800071"
-              className="px-3 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5"
+              className="px-3 py-2 bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-xs rounded-xl shadow-xs transition-all flex items-center gap-1.5 cursor-pointer"
             >
               <Phone className="w-3.5 h-3.5 fill-slate-950" />
-              <span>{t('کال کریں', 'Call')} (03004800071)</span>
+              <span>{t('کال کریں', 'Call')} (0300-4800071)</span>
             </a>
 
             <a

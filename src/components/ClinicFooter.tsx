@@ -157,7 +157,7 @@ export const ClinicFooter: React.FC = () => {
           <div className="text-center sm:text-right rtl:sm:text-right ltr:sm:text-left space-y-1">
             <p>© 2026 {t('الشہزاد دواخانہ اینڈ ہربل کلینک۔ جملہ حقوق محفوظ ہیں۔', 'Al-Shehzad Dawakhana & Herbal Clinic. All Rights Reserved.')}</p>
             <p className="text-[11px] text-emerald-300 font-bold">
-              Developed by <a href="#developer" className="text-amber-400 hover:underline">Abid Abbas Ali Goraya</a> (عابد عباس علی گورائیہ - 03004800071)
+              Developed by <a href="#developer" className="text-amber-400 hover:underline">Abid Abbas Ali Goraya</a> (عابد عباس علی گورائیہ - 0300-4800071)
             </p>
           </div>
 
