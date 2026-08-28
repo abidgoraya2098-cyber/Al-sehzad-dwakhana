@@ -25,6 +25,7 @@ import { NotificationModal } from './components/NotificationModal';
 import { SplashScreen } from './components/SplashScreen';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { SectionErrorBoundary } from './components/SectionErrorBoundary';
+import { OfflineBanner } from './components/OfflineBanner';
 import { Product } from './types';
 import { CheckCircle2 } from 'lucide-react';
 
@@ -56,6 +57,7 @@ const MainAppContent: React.FC = () => {
   return (
     <div className="min-h-screen flex flex-col bg-[#f8faf9] text-slate-900 selection:bg-emerald-800 selection:text-white">
       {showSplash && <SplashScreen onFinish={() => setShowSplash(false)} />}
+      <OfflineBanner />
 
       {/* Global Toast Notification */}
       {toastMessage && (
