@@ -76,7 +76,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [regNo, setRegNo] = useState(hakeemSettings?.regNo || 'NCT-89423');
   const [phone, setPhone] = useState(hakeemSettings?.phone || '0300-6458169');
   const [email, setEmail] = useState(hakeemSettings?.email || 'nawaznaji012@gmail.com');
-  const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
+  const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'الشہزاد دواخانہ، مین چوک چندا قلعہ بائی پاس، گوجرانوالہ');
   const [avatarUrl, setAvatarUrl] = useState(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
   const [clinicStatusModeState, setClinicStatusModeState] = useState<'auto' | 'open' | 'closed'>(hakeemSettings?.clinicStatusMode || 'auto');
 
@@ -91,16 +91,19 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [medNameEn, setMedNameEn] = useState('');
   const [medCategory, setMedCategory] = useState('majoon');
   const [medCategoryUr, setMedCategoryUr] = useState('معجون و خمیرہ جات');
-  const [medPrice, setMedPrice] = useState(1500);
+  const [medPrice, setMedPrice] = useState<number | ''>(1500);
+  const [medOriginalPrice, setMedOriginalPrice] = useState<number | ''>('');
   const [medWeightUr, setMedWeightUr] = useState('200 گرام');
   const [medWeightEn, setMedWeightEn] = useState('200g');
+  const [medTargetAilmentsUr, setMedTargetAilmentsUr] = useState('');
   const [medDescUr, setMedDescUr] = useState('');
   const [medDescEn, setMedDescEn] = useState('');
   const [medDosageUr, setMedDosageUr] = useState('');
   const [medDosageEn, setMedDosageEn] = useState('');
   const [medInStock, setMedInStock] = useState(true);
   const [medFeatured, setMedFeatured] = useState(false);
-  const [medImage, setMedImage] = useState('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80');
+  const [medFreeShipping, setMedFreeShipping] = useState(false);
+  const [medImage, setMedImage] = useState('/murad-anas-course.jpg');
 
   // Sync state whenever modal opens or settings change
   useEffect(() => {
@@ -112,7 +115,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       setRegNo(hakeemSettings.regNo || 'NCT-89423');
       setPhone(hakeemSettings.phone || '0300-6458169');
       setEmail(hakeemSettings.email || 'nawaznaji012@gmail.com');
-      setAddressUr(hakeemSettings.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ');
+      setAddressUr(hakeemSettings.addressUr || 'الشہزاد دواخانہ، مین چوک چندا قلعہ بائی پاس، گوجرانوالہ');
       setAvatarUrl(hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg');
       setClinicStatusModeState(hakeemSettings.clinicStatusMode || 'auto');
     }
@@ -136,6 +139,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       !q ||
       (p?.nameUr || '').toLowerCase().includes(q) ||
       (p?.nameEn || '').toLowerCase().includes(q) ||
+      (p?.targetAilmentsUr || '').toLowerCase().includes(q) ||
       (p?.categoryUr || '').toLowerCase().includes(q);
     return matchesCategory && matchesSearch;
   });
@@ -192,18 +196,21 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     setEditingProduct(null);
     setMedNameUr('');
     setMedNameEn('');
-    setMedCategory('majoon');
-    setMedCategoryUr('معجون و خمیرہ جات');
-    setMedPrice(1500);
-    setMedWeightUr('200 گرام');
-    setMedWeightEn('200g');
+    setMedCategory('special_courses');
+    setMedCategoryUr('طبی کورسز و پیکیجز');
+    setMedPrice(4000);
+    setMedOriginalPrice(6000);
+    setMedWeightUr('3 ہفتے کا مکمل کورس');
+    setMedWeightEn('3 Weeks Course');
+    setMedTargetAilmentsUr('بے اولادی، سپرم کی کمی، مردانہ کمزوری');
     setMedDescUr('');
     setMedDescEn('');
     setMedDosageUr('صبح و شام بعد از غذا ہمراہ نیم گرم دودھ۔');
     setMedDosageEn('Morning and evening after meals with warm milk.');
     setMedInStock(true);
-    setMedFeatured(false);
-    setMedImage('https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80');
+    setMedFeatured(true);
+    setMedFreeShipping(true);
+    setMedImage('/murad-anas-course.jpg');
     setIsAddMedicineOpen(true);
   };
 
@@ -213,16 +220,19 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     setMedNameEn(p.nameEn || '');
     setMedCategory(p.category || 'majoon');
     setMedCategoryUr(p.categoryUr || 'معجون و خمیرہ جات');
-    setMedPrice(p.price || 1000);
+    setMedPrice(p.price || 0);
+    setMedOriginalPrice(p.originalPrice || '');
     setMedWeightUr(p.weightUr || p.weight || '200 گرام');
     setMedWeightEn(p.weight || '200g');
+    setMedTargetAilmentsUr(p.targetAilmentsUr || '');
     setMedDescUr(p.descriptionUr || '');
     setMedDescEn(p.descriptionEn || '');
     setMedDosageUr(p.dosageUr || '');
     setMedDosageEn(p.dosageEn || '');
     setMedInStock(p.inStock !== false);
     setMedFeatured(!!p.featured);
-    setMedImage(p.image || 'https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?auto=format&fit=crop&w=800&q=80');
+    setMedFreeShipping(!!p.freeShipping);
+    setMedImage(p.image || '/murad-anas-course.jpg');
     setIsAddMedicineOpen(true);
   };
 
@@ -233,6 +243,9 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       return;
     }
 
+    const priceNum = typeof medPrice === 'number' ? medPrice : Number(medPrice) || 0;
+    const origPriceNum = typeof medOriginalPrice === 'number' ? medOriginalPrice : Number(medOriginalPrice) || undefined;
+
     if (editingProduct) {
       const updated: Product = {
         ...editingProduct,
@@ -241,15 +254,18 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
         category: medCategory as any,
         categoryUr: medCategoryUr,
         categoryEn: medCategory,
-        price: Number(medPrice) || 0,
-        weight: medWeightEn,
-        weightUr: medWeightUr,
+        price: priceNum,
+        originalPrice: origPriceNum,
+        weight: medWeightEn || 'Standard',
+        weightUr: medWeightUr || 'معیاری پیکنگ',
+        targetAilmentsUr: medTargetAilmentsUr,
         descriptionUr: medDescUr,
         descriptionEn: medDescEn || medDescUr,
         dosageUr: medDosageUr,
         dosageEn: medDosageEn || medDosageUr,
         inStock: medInStock,
         featured: medFeatured,
+        freeShipping: medFreeShipping,
         image: medImage,
       };
       updateProduct(updated);
@@ -263,9 +279,11 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
         category: medCategory as any,
         categoryUr: medCategoryUr,
         categoryEn: medCategory,
-        price: Number(medPrice) || 0,
-        weight: medWeightEn,
-        weightUr: medWeightUr,
+        price: priceNum,
+        originalPrice: origPriceNum,
+        weight: medWeightEn || 'Standard',
+        weightUr: medWeightUr || 'معیاری پیکنگ',
+        targetAilmentsUr: medTargetAilmentsUr,
         descriptionUr: medDescUr,
         descriptionEn: medDescEn || medDescUr,
         benefitsUr: ['قدرتی جڑی بوٹیوں سے تیار کردہ', 'خالص دیسی اجزاء بغیر سائیڈ ایفیکٹ'],
@@ -277,6 +295,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
         image: medImage,
         inStock: medInStock,
         featured: medFeatured,
+        freeShipping: medFreeShipping,
         rating: 5.0,
         reviewsCount: 1,
       };
@@ -609,7 +628,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     type="text"
                     value={medicineSearch}
                     onChange={(e) => setMedicineSearch(e.target.value)}
-                    placeholder={t('دوا کا نام یا کیٹیگری تلاش کریں...', 'Search medicine by name...')}
+                    placeholder={t('دوا کا نام، مرض یا کیٹیگری تلاش کریں...', 'Search medicine, ailment or category...')}
                     className="w-full text-xs py-2 px-9 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600 font-bold bg-white"
                   />
                 </div>
@@ -620,6 +639,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                   className="text-xs font-bold py-2 px-3 rounded-xl border border-slate-300 bg-white focus:outline-none focus:border-emerald-600 cursor-pointer"
                 >
                   <option value="all">{t('تمام اقسام', 'All Categories')}</option>
+                  <option value="special_courses">{t('🌟 طبی کورسز و پیکیجز', 'Special Courses')}</option>
                   <option value="vitality">{t('مقوی عام و شباب', 'Vitality')}</option>
                   <option value="majoon">{t('معجون و خمیرہ', 'Majoon')}</option>
                   <option value="honey_syrup">{t('شہد و شربت', 'Honey/Syrups')}</option>
@@ -635,7 +655,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                   className="px-4 py-2 bg-emerald-800 hover:bg-emerald-700 text-white font-black text-xs rounded-xl shadow-sm flex items-center gap-1.5 transition-all cursor-pointer border border-emerald-600"
                 >
                   <Plus className="w-4 h-4 text-amber-300" />
-                  <span>{t('نئی دوا شامل کریں', 'Add New Medicine')}</span>
+                  <span>{t('نئی دوا / کورس شامل کریں', 'Add New Medicine')}</span>
                 </button>
 
                 <button
@@ -690,6 +710,11 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                           <h4 className="font-black text-sm text-slate-900 truncate mt-1">
                             {prod.nameUr}
                           </h4>
+                          {prod.targetAilmentsUr && (
+                            <span className="text-[10px] text-emerald-700 font-bold truncate block">
+                              💊 {prod.targetAilmentsUr}
+                            </span>
+                          )}
                           <span className="text-[11px] text-slate-500 truncate block">
                             {prod.nameEn}
                           </span>
@@ -1044,7 +1069,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                 <div className="flex items-center gap-2">
                   <Package className="w-5 h-5 text-emerald-800" />
                   <h3 className="font-black text-base text-slate-900">
-                    {editingProduct ? t('دوا میں ترمیم کریں', 'Edit Medicine') : t('نئی دوا شامل کریں', 'Add New Medicine')}
+                    {editingProduct ? t('دوا یا کورس میں ترمیم کریں', 'Edit Medicine / Course') : t('نئی دوا یا کورس شامل کریں', 'Add New Medicine / Course')}
                   </h3>
                 </div>
                 <button
@@ -1058,14 +1083,14 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
               <form onSubmit={handleSaveMedicine} className="space-y-3.5 text-xs">
                 <div>
                   <label className="font-bold text-slate-800 block mb-1">
-                    {t('دوا کا نام (اردو) *:', 'Medicine Name (Urdu) *:')}
+                    {t('دوا یا کورس کا نام (اردو) *:', 'Medicine / Course Name (Urdu) *:')}
                   </label>
                   <input
                     type="text"
                     required
                     value={medNameUr}
                     onChange={(e) => setMedNameUr(e.target.value)}
-                    placeholder="مثلاً معجون شبابِ خاص"
+                    placeholder="مثلاً مرادِ انس کورس یا معجون شبابِ خاص"
                     className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
                   />
                 </div>
@@ -1078,8 +1103,22 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     type="text"
                     value={medNameEn}
                     onChange={(e) => setMedNameEn(e.target.value)}
-                    placeholder="e.g. Majoon Shabab-e-Khas"
+                    placeholder="e.g. Murad-e-Anas Course"
                     className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
+                  />
+                </div>
+
+                {/* Target Ailments / Diseases Field (Optional) */}
+                <div>
+                  <label className="font-bold text-slate-800 block mb-1">
+                    {t('متعلقہ امراض / عوارض (اختیاری — مثلاً بے اولادی، سپرم کی کمی، معدہ):', 'Target Ailments / Diseases (Optional):')}
+                  </label>
+                  <input
+                    type="text"
+                    value={medTargetAilmentsUr}
+                    onChange={(e) => setMedTargetAilmentsUr(e.target.value)}
+                    placeholder="مثلاً بے اولادی، سپرم کی کمی، اعصابی کمزوری، معدہ و گیس"
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 bg-amber-50/40"
                   />
                 </div>
 
@@ -1093,6 +1132,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                       onChange={(e) => {
                         setMedCategory(e.target.value);
                         const labelMap: Record<string, string> = {
+                          special_courses: 'طبی کورسز و پیکیجز',
                           vitality: 'مقوی عام و شباب',
                           majoon: 'معجون و خمیرہ جات',
                           honey_syrup: 'قدرتی شہد و شربت',
@@ -1104,6 +1144,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                       }}
                       className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 bg-white"
                     >
+                      <option value="special_courses">🌟 طبی کورسز و پیکیجز (Special Courses)</option>
                       <option value="vitality">مقوی عام و شباب (Vitality)</option>
                       <option value="majoon">معجون و خمیرہ جات (Majoon)</option>
                       <option value="honey_syrup">قدرتی شہد و شربت (Honey/Syrups)</option>
@@ -1115,13 +1156,13 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
 
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">
-                      {t('قیمت / ریٹ (Rs.) *:', 'Price (Rs.) *:')}
+                      {t('قیمت / ریٹ (Rs. — اختیاری):', 'Price (Rs. — Optional):')}
                     </label>
                     <input
                       type="number"
-                      required
                       value={medPrice}
-                      onChange={(e) => setMedPrice(Number(e.target.value) || 0)}
+                      onChange={(e) => setMedPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                      placeholder="0"
                       className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 font-mono"
                     />
                   </div>
@@ -1130,27 +1171,66 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">
-                      {t('وزن / پیکنگ (اردو):', 'Weight (Urdu):')}
+                      {t('اصل قیمت (اگر رعایت دکھانی ہو — اختیاری):', 'Original Price (Crossed-out):')}
                     </label>
                     <input
-                      type="text"
-                      value={medWeightUr}
-                      onChange={(e) => setMedWeightUr(e.target.value)}
-                      placeholder="مثلاً 250 گرام"
-                      className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
+                      type="number"
+                      value={medOriginalPrice}
+                      onChange={(e) => setMedOriginalPrice(e.target.value === '' ? '' : Number(e.target.value))}
+                      placeholder="مثلاً 6000"
+                      className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 font-mono"
                     />
                   </div>
 
                   <div>
                     <label className="font-bold text-slate-800 block mb-1">
-                      {t('تصویر کا لنک (Image URL):', 'Image URL:')}
+                      {t('وزن / دورانیہ (اردو):', 'Weight / Duration (Urdu):')}
                     </label>
                     <input
                       type="text"
-                      value={medImage}
-                      onChange={(e) => setMedImage(e.target.value)}
-                      className="w-full p-2.5 rounded-xl border border-slate-300 font-mono focus:outline-none focus:border-emerald-600 text-[11px]"
+                      value={medWeightUr}
+                      onChange={(e) => setMedWeightUr(e.target.value)}
+                      placeholder="مثلاً 3 ہفتے کا کورس یا 250 گرام"
+                      className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
                     />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="font-bold text-slate-800 block mb-1">
+                    {t('تصویر کا لنک (Image URL):', 'Image URL:')}
+                  </label>
+                  <input
+                    type="text"
+                    value={medImage}
+                    onChange={(e) => setMedImage(e.target.value)}
+                    className="w-full p-2.5 rounded-xl border border-slate-300 font-mono focus:outline-none focus:border-emerald-600 text-[11px]"
+                  />
+
+                  {/* Quick Image Picker Buttons */}
+                  <div className="flex flex-wrap items-center gap-1.5 mt-2">
+                    <span className="text-[10px] text-slate-500 font-bold">{t('فوری تصویر منتخب کریں:', 'Quick Image:')}</span>
+                    <button
+                      type="button"
+                      onClick={() => setMedImage('/murad-anas-course.jpg')}
+                      className="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-[10px] rounded cursor-pointer"
+                    >
+                      👶 مرادِ انس کورس
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMedImage('/infertility-cure.jpg')}
+                      className="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-[10px] rounded cursor-pointer"
+                    >
+                      🌿 بے اولادی پیکیج
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setMedImage('/murad-anas-banner.jpg')}
+                      className="px-2 py-1 bg-emerald-100 hover:bg-emerald-200 text-emerald-950 font-bold text-[10px] rounded cursor-pointer"
+                    >
+                      👨‍👩‍👧 فیملی بینر
+                    </button>
                   </div>
                 </div>
 
@@ -1162,7 +1242,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     rows={2}
                     value={medDescUr}
                     onChange={(e) => setMedDescUr(e.target.value)}
-                    placeholder="دوا کے اہم فوائد اور خصوصیات..."
+                    placeholder="دوا یا کورس کے اہم فوائد اور خصوصیات..."
                     className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
                   ></textarea>
                 </div>
@@ -1175,12 +1255,12 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     type="text"
                     value={medDosageUr}
                     onChange={(e) => setMedDosageUr(e.target.value)}
-                    placeholder="مثلاً نصف چمچ صبح و شام نیم گرم دودھ کے ہمراہ..."
+                    placeholder="مثلاً صبح و شام بعد از غذا ہمراہ نیم گرم دودھ..."
                     className="w-full p-2.5 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
                   />
                 </div>
 
-                <div className="flex items-center gap-4 pt-1">
+                <div className="flex flex-wrap items-center gap-4 pt-1">
                   <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800">
                     <input
                       type="checkbox"
@@ -1200,6 +1280,16 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     />
                     <span>{t('نمایاں پراڈکٹ (Featured)', 'Featured')}</span>
                   </label>
+
+                  <label className="flex items-center gap-2 cursor-pointer font-bold text-slate-800">
+                    <input
+                      type="checkbox"
+                      checked={medFreeShipping}
+                      onChange={(e) => setMedFreeShipping(e.target.checked)}
+                      className="w-4 h-4 rounded text-emerald-800 focus:ring-emerald-500"
+                    />
+                    <span>{t('فری ہوم ڈیلیوری (Free Shipping)', 'Free Shipping')}</span>
+                  </label>
                 </div>
 
                 <div className="pt-3">
@@ -1208,7 +1298,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                     className="w-full py-3 bg-emerald-800 hover:bg-emerald-700 text-white font-black text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Check className="w-4 h-4" />
-                    <span>{editingProduct ? t('تبدیلیاں محفوظ کریں', 'Save Changes') : t('دوا شامل کریں', 'Add Medicine')}</span>
+                    <span>{editingProduct ? t('تبدیلیاں محفوظ کریں اور لائیو سنک کریں', 'Save & Sync Live') : t('دوا شامل کریں اور لائیو سنک کریں', 'Add & Sync Live')}</span>
                   </button>
                 </div>
               </form>

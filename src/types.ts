@@ -18,16 +18,18 @@ export interface HakeemSettings {
   clinicTimingsUr: string;
   clinicTimingsEn: string;
   clinicStatusMode?: 'auto' | 'open' | 'closed';
+  landline?: string;
 }
 
 export interface Product {
   id: string;
   nameUr: string;
   nameEn: string;
-  category: 'majoon' | 'arqiat' | 'safoof' | 'honey_syrup' | 'oils' | 'vitality';
+  category: 'majoon' | 'arqiat' | 'safoof' | 'honey_syrup' | 'oils' | 'vitality' | 'special_courses' | string;
   categoryUr: string;
   categoryEn: string;
   price: number;
+  originalPrice?: number;
   weight: string;
   weightUr: string;
   descriptionUr: string;
@@ -45,6 +47,11 @@ export interface Product {
   badgeEn?: string;
   rating: number;
   reviewsCount: number;
+  targetAilmentsUr?: string;
+  targetAilmentsEn?: string;
+  durationUr?: string;
+  durationEn?: string;
+  freeShipping?: boolean;
 }
 
 export interface CartItem {

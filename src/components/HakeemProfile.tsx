@@ -25,10 +25,12 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
   const { hakeemSettings } = useAdmin();
 
   const specializations = [
+    { ur: 'علاج بے اولادی و بانجھ پن — مرادِ انس کورس (Infertility Cure)', en: 'Infertility Treatment & Family Wellness (Murad-e-Anas)' },
+    { ur: 'سپرم کی کمی (Oligospermia) و تولیدی کمزوری کا 100% علاج', en: '100% Herbal Treatment for Low Sperm Count & Motility' },
     { ur: 'تشخیص بذریعہ نبض و قارورہ (Pulse Diagnosis)', en: 'Traditional Pulse & Clinical Diagnosis' },
     { ur: 'امراضِ معدہ، جگر، السر و پرانی گیس', en: 'Gastrointestinal & Liver Disorders' },
     { ur: 'جوڑوں، گھٹنوں، یورک ایسڈ اور مہروں کا درد', en: 'Arthritis, Joint Pain & Spine Care' },
-    { ur: 'اعصابی کمزوری و مقویاتِ خاص', en: 'Neurological & Physical Vitality' },
+    { ur: 'اعصابی کمزوری، پٹھوں کا کھچاؤ و مقویاتِ خاص', en: 'Neurological & Physical Vitality' },
     { ur: 'ماہرِ حجامہ و کپنگ تھراپی (سنت علاج)', en: 'Certified Hijama & Cupping Specialist' },
     { ur: 'خواتین و مردانہ پوشیدہ امراض', en: 'Specialized Metabolic & Reproductive Health' },
   ];
@@ -132,6 +134,20 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
                   </a>
                 </div>
 
+                {/* Landline Number */}
+                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                  <div className="flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-amber-400 shrink-0" />
+                    <span className="font-bold text-slate-200">{t('پی ٹی سی ایل فون:', 'Landline:')}</span>
+                  </div>
+                  <a
+                    href="tel:0554290297"
+                    className="font-mono font-black text-amber-300 hover:text-amber-200"
+                  >
+                    055-4290297
+                  </a>
+                </div>
+
                 {/* Email Address */}
                 <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
                   <div className="flex items-center gap-2">
@@ -150,6 +166,39 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
 
             {/* Detailed Bio & Specializations (7 cols) */}
             <div className="lg:col-span-7 space-y-5">
+              {/* Murad-e-Anas Featured Infertility Banner Card */}
+              <div className="bg-gradient-to-r from-emerald-900 via-emerald-800 to-teal-900 p-4 sm:p-5 rounded-2xl border-2 border-amber-400 shadow-xl flex flex-col sm:flex-row items-center gap-4">
+                <img
+                  src="/murad-anas-course.jpg"
+                  alt="Murad-e-Anas Course"
+                  className="w-full sm:w-40 h-36 object-cover rounded-xl border border-amber-300 shrink-0 shadow-md"
+                />
+                <div className="space-y-1.5 text-center sm:text-right rtl:sm:text-right ltr:sm:text-left flex-1">
+                  <span className="inline-block px-2.5 py-0.5 bg-amber-400 text-emerald-950 font-black text-[11px] rounded-full">
+                    {t('خصوصی طبی شعبہ — پیغامِ شفاء', 'Specialized Clinic Department')}
+                  </span>
+                  <h4 className="text-base sm:text-lg font-black text-white">
+                    {t('مرادِ انس کورس — بے اولاد حضرات کیلئے پیغامِ شفاء', 'Murad-e-Anas Course — Infertility is Curable')}
+                  </h4>
+                  <p className="text-xs text-emerald-100 font-medium leading-relaxed">
+                    {t(
+                      'سپرم کی کمی (Oligospermia)، مردانہ کمزوری اور بانجھ پن کا 100% انشاء اللہ آزمودہ علاج۔ دورانیہ 3 ہفتے — قیمت صرف 4000 روپے بمعہ فری ہوم ڈیلیوری۔',
+                      '100% herbal cure for low sperm count and reproductive wellness. 3 weeks course for Rs. 4000 with Free Delivery across Pakistan.'
+                    )}
+                  </p>
+                  <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 pt-1">
+                    <a
+                      href={`https://wa.me/${whatsappNumber}?text=${encodeURIComponent('السلام علیکم حکیم صاحب! مجھے مرادِ انس کورس (بے اولاد حضرات کیلئے پیغام شفاء) کے سلسلے میں رہنمائی اور آرڈر چاہیے ہے۔')}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="px-3 py-1.5 bg-[#25D366] hover:bg-emerald-600 text-white font-black text-xs rounded-lg transition-colors inline-flex items-center gap-1 shadow-sm"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5" />
+                      <span>{t('کورس کی معلومات و آرڈر', 'Order Murad-e-Anas Course')}</span>
+                    </a>
+                  </div>
+                </div>
+              </div>
               {/* Bio Statement */}
               <div className="bg-emerald-900/60 p-4 sm:p-5 rounded-2xl border border-emerald-700/60 space-y-2">
                 <h4 className="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-2">

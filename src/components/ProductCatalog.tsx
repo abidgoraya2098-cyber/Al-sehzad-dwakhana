@@ -31,6 +31,7 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   const categories = [
     { id: 'all', labelUr: 'تمام ادویات و مصنوعات', labelEn: 'All Products' },
+    { id: 'special_courses', labelUr: '🌟 طبی کورسز و سپیشل پیکیجز', labelEn: 'Special Treatment Courses' },
     { id: 'vitality', labelUr: 'مقوی عام و شباب', labelEn: 'Vitality & Stamina' },
     { id: 'majoon', labelUr: 'معجون و خمیرہ جات', labelEn: 'Majoon & Khamira' },
     { id: 'honey_syrup', labelUr: 'قدرتی شہد و شربت', labelEn: 'Honey & Syrups' },
@@ -200,6 +201,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                       {isUrdu ? product.nameUr : product.nameEn}
                     </h3>
 
+                    {/* Target Ailments */}
+                    {product.targetAilmentsUr && (
+                      <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md inline-block mt-0.5 truncate max-w-full">
+                        💊 {isUrdu ? product.targetAilmentsUr : (product.targetAilmentsEn || product.targetAilmentsUr)}
+                      </span>
+                    )}
+
                     {/* Short Description */}
                     <p className="text-xs text-slate-600 line-clamp-2 mt-1 font-medium">
                       {isUrdu ? product.descriptionUr : product.descriptionEn}
@@ -209,10 +217,24 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                   {/* Price and Actions */}
                   <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
                     <div>
-                      <span className="text-[10px] text-slate-400 block font-semibold">{t('قیمت', 'Price')}</span>
-                      <span className="text-base sm:text-lg font-black text-emerald-950">
-                        Rs. {product.price.toLocaleString()}
-                      </span>
+                      <div className="flex items-center gap-1.5">
+                        <span className="text-[10px] text-slate-400 font-semibold">{t('قیمت', 'Price')}</span>
+                        {product.freeShipping && (
+                          <span className="text-[9px] bg-emerald-100 text-emerald-900 font-black px-1.5 py-0.2 rounded">
+                            {t('فری شپنگ', 'Free Delivery')}
+                          </span>
+                        )}
+                      </div>
+                      <div className="flex items-baseline gap-1.5">
+                        <span className="text-base sm:text-lg font-black text-emerald-950">
+                          Rs. {product.price.toLocaleString()}
+                        </span>
+                        {product.originalPrice && product.originalPrice > product.price && (
+                          <span className="text-xs font-bold text-red-500 line-through">
+                            Rs. {product.originalPrice.toLocaleString()}
+                          </span>
+                        )}
+                      </div>
                     </div>
 
                     <div className="flex items-center gap-1.5">
