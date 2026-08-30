@@ -1,6 +1,12 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { ConsultationSubmission, HakeemSettings, Product } from '../types';
 import { productsData } from '../data/products';
+import {
+  fetchHakeemSettingsFromCloud,
+  syncHakeemSettingsToCloud,
+  fetchProductsFromCloud,
+  syncProductsToCloud,
+} from '../services/cloudSync';
 
 interface AdminContextType {
   isAdminLoggedIn: boolean;
@@ -21,6 +27,8 @@ interface AdminContextType {
   updateProductStock: (id: string, inStock: boolean) => void;
   deleteProduct: (id: string) => void;
   resetProductsToDefault: () => void;
+  isCloudSyncing: boolean;
+  refreshFromCloud: () => Promise<void>;
 }
 
 export const defaultHakeemSettings: HakeemSettings = {
@@ -43,8 +51,8 @@ export const defaultHakeemSettings: HakeemSettings = {
   clinicStatusMode: 'auto',
 };
 
-const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v6';
-const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v1';
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v7';
+const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v2';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
@@ -114,6 +122,61 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   });
 
+  const [isCloudSyncing, setIsCloudSyncing] = useState<boolean>(false);
+
+  // Cloud Fetch & Synchronize Function
+  const refreshFromCloud = useCallback(async () => {
+    try {
+      setIsCloudSyncing(true);
+      // 1. Fetch live settings
+      const cloudSettings = await fetchHakeemSettingsFromCloud();
+      if (cloudSettings && typeof cloudSettings === 'object') {
+        setHakeemSettings((prev) => {
+          const merged = {
+            ...prev,
+            ...cloudSettings,
+          };
+          try {
+            localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
+          } catch {}
+          return merged;
+        });
+      }
+
+      // 2. Fetch live products
+      const cloudProducts = await fetchProductsFromCloud();
+      if (cloudProducts && Array.isArray(cloudProducts) && cloudProducts.length > 0) {
+        setProducts(cloudProducts);
+        try {
+          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(cloudProducts));
+        } catch {}
+      }
+    } catch (e) {
+      console.warn('Cloud sync refresh error:', e);
+    } finally {
+      setIsCloudSyncing(false);
+    }
+  }, []);
+
+  // Sync on startup and when user returns to window/tab
+  useEffect(() => {
+    refreshFromCloud();
+
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        refreshFromCloud();
+      }
+    };
+
+    const interval = setInterval(refreshFromCloud, 30000); // Check every 30 seconds
+    document.addEventListener('visibilitychange', handleVisibilityChange);
+
+    return () => {
+      clearInterval(interval);
+      document.removeEventListener('visibilitychange', handleVisibilityChange);
+    };
+  }, [refreshFromCloud]);
+
   useEffect(() => {
     try {
       localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(hakeemSettings));
@@ -171,7 +234,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const phoneStr = newSettings.phone || prev.phone || '0300-6458169';
       const cleanWhatsapp = phoneStr.replace(/\D/g, '') || '923006458169';
 
-      return {
+      const updated: HakeemSettings = {
         ...prev,
         ...newSettings,
         phone: phoneStr,
@@ -180,6 +243,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         avatarUrl: newSettings.avatarUrl || prev.avatarUrl || '/hakeem-nawaz.jpg',
         clinicStatusMode: newSettings.clinicStatusMode || prev.clinicStatusMode || 'auto',
       };
+
+      // Broadcast to cloud store immediately so all visitors get the update
+      syncHakeemSettingsToCloud(updated).catch((err) => {
+        console.warn('Failed to broadcast settings to cloud:', err);
+      });
+
+      return updated;
     });
   };
 
@@ -207,36 +277,51 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setConsultations((prev) => prev.filter((c) => c.id !== id));
   };
 
-  // Medicine Inventory Management Functions
+  // Medicine Inventory Management Functions with Instant Cloud Sync
   const addProduct = (newProduct: Product) => {
-    setProducts((prev) => [newProduct, ...prev]);
+    setProducts((prev) => {
+      const updated = [newProduct, ...prev];
+      syncProductsToCloud(updated).catch(console.warn);
+      return updated;
+    });
   };
 
   const updateProduct = (updatedProduct: Product) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
-    );
+    setProducts((prev) => {
+      const updated = prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p));
+      syncProductsToCloud(updated).catch(console.warn);
+      return updated;
+    });
   };
 
   const updateProductPrice = (id: string, newPrice: number) => {
     const validPrice = Math.max(0, Math.round(newPrice));
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, price: validPrice } : p))
-    );
+    setProducts((prev) => {
+      const updated = prev.map((p) => (p.id === id ? { ...p, price: validPrice } : p));
+      syncProductsToCloud(updated).catch(console.warn);
+      return updated;
+    });
   };
 
   const updateProductStock = (id: string, inStock: boolean) => {
-    setProducts((prev) =>
-      prev.map((p) => (p.id === id ? { ...p, inStock } : p))
-    );
+    setProducts((prev) => {
+      const updated = prev.map((p) => (p.id === id ? { ...p, inStock } : p));
+      syncProductsToCloud(updated).catch(console.warn);
+      return updated;
+    });
   };
 
   const deleteProduct = (id: string) => {
-    setProducts((prev) => prev.filter((p) => p.id !== id));
+    setProducts((prev) => {
+      const updated = prev.filter((p) => p.id !== id);
+      syncProductsToCloud(updated).catch(console.warn);
+      return updated;
+    });
   };
 
   const resetProductsToDefault = () => {
     setProducts(productsData);
+    syncProductsToCloud(productsData).catch(console.warn);
   };
 
   return (
@@ -260,6 +345,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         updateProductStock,
         deleteProduct,
         resetProductsToDefault,
+        isCloudSyncing,
+        refreshFromCloud,
       }}
     >
       {children}
@@ -289,6 +376,8 @@ export const useAdmin = () => {
       updateProductStock: () => {},
       deleteProduct: () => {},
       resetProductsToDefault: () => {},
+      isCloudSyncing: false,
+      refreshFromCloud: async () => {},
     };
   }
   return context;

@@ -24,8 +24,8 @@ import {
   Check,
   RotateCcw,
   Sparkles,
-  ToggleLeft,
-  ToggleRight
+  Cloud,
+  RefreshCw
 } from 'lucide-react';
 import { useAdmin } from '../context/AdminContext';
 import { useLanguage } from '../context/LanguageContext';
@@ -58,6 +58,8 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
     updateProductStock,
     deleteProduct,
     resetProductsToDefault,
+    isCloudSyncing,
+    refreshFromCloud,
   } = useAdmin();
 
   const { showToast } = useNotifications();
@@ -152,7 +154,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       avatarUrl,
       clinicStatusMode: clinicStatusModeState,
     });
-    showToast(t('حکیم صاحب کی پروفائل و کلینک سیٹنگز کامیابی سے محفوظ ہو گئیں!', 'Hakeem Profile & Clinic Settings Updated Successfully!'));
+    showToast(t('پروفائل محفوظ اور تمام صارفین کے پاس لائیو کلاؤڈ سنک ہو گئی!', 'Profile Saved & Live Synced to Cloud!'));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -251,7 +253,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
         image: medImage,
       };
       updateProduct(updated);
-      showToast(t('دوا کی تفصیلات کامیابی سے اپ ڈیٹ ہو گئیں!', 'Medicine Updated Successfully!'));
+      showToast(t('دوا اپ ڈیٹ ہو کر تمام صارفین کے پاس لائیو ہو گئی!', 'Medicine Live Synced to Cloud!'));
     } else {
       const newId = 'med_' + Date.now();
       const created: Product = {
@@ -279,7 +281,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
         reviewsCount: 1,
       };
       addProduct(created);
-      showToast(t('نئی دوا کامیابی سے شامل کر دی گئی!', 'New Medicine Added Successfully!'));
+      showToast(t('نئی دوا شامل ہو کر تمام صارفین کے پاس لائیو ہو گئی!', 'New Medicine Live Synced to Cloud!'));
     }
     setIsAddMedicineOpen(false);
   };
@@ -309,6 +311,25 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
           </div>
 
           <div className="flex items-center gap-2">
+            {/* Cloud Sync Status Indicator */}
+            <div className="hidden sm:flex items-center gap-1.5 text-xs bg-emerald-900/90 border border-emerald-700 px-3 py-1.5 rounded-xl text-emerald-200">
+              <Cloud className={`w-3.5 h-3.5 ${isCloudSyncing ? 'text-amber-400 animate-spin' : 'text-emerald-400'}`} />
+              <span className="font-bold">
+                {isCloudSyncing ? t('کلاؤڈ سنک ہو رہا ہے...', 'Syncing...') : t('کلاؤڈ لائیو سنک فعال ہے ☁️', 'Cloud Sync Active ☁️')}
+              </span>
+              <button
+                onClick={() => {
+                  refreshFromCloud().then(() => {
+                    showToast(t('کلاؤڈ سے تمام ڈیٹا ریفریش ہو گیا!', 'Cloud Data Refreshed!'));
+                  });
+                }}
+                className="p-1 hover:bg-emerald-800 rounded-lg text-amber-300 ml-1 cursor-pointer transition-colors"
+                title="Refresh Cloud Data"
+              >
+                <RefreshCw className={`w-3 h-3 ${isCloudSyncing ? 'animate-spin' : ''}`} />
+              </button>
+            </div>
+
             <button
               onClick={() => {
                 logoutAdmin();
@@ -756,10 +777,10 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
           <form onSubmit={handleSaveProfile} className="p-5 sm:p-6 space-y-4 flex-1 overflow-y-auto text-right rtl:text-right ltr:text-left">
             <div className="border-b border-slate-200 pb-3">
               <h3 className="font-black text-base text-slate-900">
-                {t('حکیم صاحب و کلینک پروفائل سیٹنگز', 'Hakeem & Clinic Profile Information')}
+                {t('حکیم صاحب و کلینک پروفائل سیٹنگز (کلاؤڈ سنک)', 'Hakeem & Clinic Profile Information (Cloud Synced)')}
               </h3>
               <p className="text-xs text-slate-500 font-medium">
-                {t('یہاں سے آپ اپنا نام، تصویر، اسناد، کلینک کا پتہ، رابطہ نمبرز اور کلینک کی دستیابی لائیو اپ ڈیٹ کر سکتے ہیں۔', 'Update personal details, portrait image, degrees, address, live contacts, and clinic open/closed status.')}
+                {t('یہاں سے آپ جو بھی تفصیلات، رجسٹریشن نمبر یا تصویر محفوظ کریں گے، وہ فورا تمام صارفین کے پاس لائیو اپ ڈیٹ ہو جائے گی۔', 'Any updates saved here sync instantly to the cloud and become live for all visitors worldwide.')}
               </p>
             </div>
 
@@ -889,13 +910,14 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
 
               <div>
                 <label className="text-xs font-bold text-slate-800 block mb-1">
-                  {t('رجسٹریشن نمبر:', 'Registration No:')}
+                  {t('رجسٹریشن نمبر *:', 'Registration No *:')}
                 </label>
                 <input
                   type="text"
                   value={regNo}
                   onChange={(e) => setRegNo(e.target.value)}
                   className="w-full text-xs p-3 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 font-mono"
+                  placeholder="e.g. NCT-89423"
                 />
               </div>
             </div>
@@ -948,7 +970,7 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
                 className="w-full py-3.5 bg-emerald-900 hover:bg-emerald-800 text-white font-black text-sm rounded-xl shadow-lg transition-all flex items-center justify-center gap-2 cursor-pointer border border-amber-400"
               >
                 <Save className="w-4 h-4 text-amber-400" />
-                <span>{t('سیٹنگز محفوظ کریں (Save All Settings)', 'Save Settings')}</span>
+                <span>{t('سیٹنگز محفوظ کریں اور لائیو سنک کریں (Save & Sync Live)', 'Save & Sync Live')}</span>
               </button>
             </div>
           </form>
