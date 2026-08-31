@@ -140,6 +140,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           const merged = {
             ...prev,
             ...cloudSettings,
+            regNo: cloudSettings.regNo || prev.regNo || 'QH-34430-A',
+            phcRegNo: cloudSettings.phcRegNo || prev.phcRegNo || 'R-63608',
           };
           try {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
@@ -163,7 +165,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  // Sync on startup and when user returns to window/tab
+  // Multi-tab, live channel, interval, and focus auto-sync
   useEffect(() => {
     refreshFromCloud();
 
@@ -173,12 +175,41 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     };
 
-    const interval = setInterval(refreshFromCloud, 30000); // Check every 30 seconds
+    const handleFocus = () => {
+      refreshFromCloud();
+    };
+
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === SETTINGS_STORAGE_KEY && e.newValue) {
+        try {
+          setHakeemSettings(JSON.parse(e.newValue));
+        } catch {}
+      }
+      if (e.key === PRODUCTS_STORAGE_KEY && e.newValue) {
+        try {
+          setProducts(JSON.parse(e.newValue));
+        } catch {}
+      }
+    };
+
+    if (liveSyncChannel) {
+      liveSyncChannel.onmessage = (event) => {
+        if (event.data?.type) {
+          refreshFromCloud();
+        }
+      };
+    }
+
+    const interval = setInterval(refreshFromCloud, 15000); // Check every 15 seconds for real-time live sync
     document.addEventListener('visibilitychange', handleVisibilityChange);
+    window.addEventListener('focus', handleFocus);
+    window.addEventListener('storage', handleStorage);
 
     return () => {
       clearInterval(interval);
       document.removeEventListener('visibilitychange', handleVisibilityChange);
+      window.removeEventListener('focus', handleFocus);
+      window.removeEventListener('storage', handleStorage);
     };
   }, [refreshFromCloud]);
 

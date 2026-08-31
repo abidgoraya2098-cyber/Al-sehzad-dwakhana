@@ -153,6 +153,12 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
                   <Award className="w-4 h-4 text-amber-400" />
                   <span>Best Performance Award Holder</span>
                 </div>
+                {/* Prominent NCT Registration Highlight */}
+                <div className="pt-1 text-xs font-black text-emerald-200 flex items-center justify-center gap-2">
+                  <span className="px-2.5 py-1 bg-emerald-950 rounded-lg border border-amber-400/60 font-mono text-amber-300 text-xs">
+                    {t('نیشنل کونسل فار طب نمبر:', 'NCT Reg:')} <strong>{nctReg}</strong>
+                  </span>
+                </div>
               </div>
 
               {/* Official Registration License Numbers Box */}
@@ -169,21 +175,21 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                   {/* NCT Reg */}
-                  <div className="p-2 bg-emerald-900/90 rounded-xl border border-emerald-700/80">
+                  <div className="p-2.5 bg-emerald-900/90 rounded-xl border border-amber-400/40">
                     <span className="text-[10px] font-bold text-slate-300 block">
                       {t('نیشنل کونسل فار طب:', 'National Council for Tibb:')}
                     </span>
-                    <span className="font-mono font-black text-amber-300 text-xs">
+                    <span className="font-mono font-black text-amber-300 text-sm">
                       {nctReg}
                     </span>
                   </div>
 
                   {/* PHC Reg */}
-                  <div className="p-2 bg-emerald-900/90 rounded-xl border border-emerald-700/80">
+                  <div className="p-2.5 bg-emerald-900/90 rounded-xl border border-emerald-700/80">
                     <span className="text-[10px] font-bold text-slate-300 block">
                       {t('پنجاب ہیلتھ کیئر کمیشن:', 'Punjab Health Commission:')}
                     </span>
-                    <span className="font-mono font-black text-emerald-300 text-xs">
+                    <span className="font-mono font-black text-emerald-300 text-sm">
                       {phcReg}
                     </span>
                   </div>
@@ -193,20 +199,20 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
                 <button
                   type="button"
                   onClick={() => setShowCardModal(true)}
-                  className="w-full mt-2 py-2 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 font-black text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+                  className="w-full mt-2 py-2.5 bg-gradient-to-r from-amber-500 to-amber-400 hover:from-amber-400 hover:to-amber-300 text-emerald-950 font-black text-xs rounded-xl shadow transition-all flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <CreditCard className="w-4 h-4" />
                   <span>{t('حکیم صاحب کا اصل وزٹنگ کارڈ دیکھیں', 'View Official Visiting Card')}</span>
                 </button>
               </div>
 
-              {/* Clean Contact Details Box */}
+              {/* Clean Contact Details Box (Mobile & WhatsApp only, No Landline) */}
               <div className="w-full bg-emerald-900/90 rounded-2xl p-4 border border-emerald-700/80 text-left rtl:text-right space-y-2.5 text-xs">
                 {/* Mobile / WhatsApp */}
-                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                <div className="flex items-center justify-between gap-2 p-2.5 bg-emerald-950/60 rounded-xl border border-emerald-800">
                   <div className="flex items-center gap-2">
                     <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span className="font-bold text-slate-200">{t('موبائل / واٹس ایپ:', 'Mobile / WhatsApp:')}</span>
+                    <span className="font-bold text-slate-200">{t('موبائل نمبر:', 'Mobile:')}</span>
                   </div>
                   <a
                     href={`tel:${cleanPhoneDigits}`}
@@ -217,37 +223,23 @@ export const HakeemProfile: React.FC<HakeemProfileProps> = ({
                 </div>
 
                 {/* Direct WhatsApp Action */}
-                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                <div className="flex items-center justify-between gap-2 p-2.5 bg-emerald-950/60 rounded-xl border border-emerald-800">
                   <div className="flex items-center gap-2">
                     <MessageSquare className="w-4 h-4 text-[#25D366] shrink-0" />
-                    <span className="font-bold text-slate-200">{t('براہِ راست چیٹ:', 'Direct Chat:')}</span>
+                    <span className="font-bold text-slate-200">{t('واٹس ایپ چیٹ:', 'WhatsApp Chat:')}</span>
                   </div>
                   <a
                     href={`https://wa.me/${whatsappNumber}`}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-mono font-black text-[#25D366] hover:text-emerald-400"
+                    className="font-mono font-black text-[#25D366] hover:text-emerald-400 text-sm"
                   >
                     0300-6458169
                   </a>
                 </div>
 
-                {/* Landline Number */}
-                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
-                  <div className="flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-amber-400 shrink-0" />
-                    <span className="font-bold text-slate-200">{t('پی ٹی سی ایل کلینک:', 'Landline Clinic:')}</span>
-                  </div>
-                  <a
-                    href="tel:0554290297"
-                    className="font-mono font-black text-amber-300 hover:text-amber-200"
-                  >
-                    055-4290297
-                  </a>
-                </div>
-
                 {/* Email Address */}
-                <div className="flex items-center justify-between gap-2 p-2 bg-emerald-950/60 rounded-xl border border-emerald-800">
+                <div className="flex items-center justify-between gap-2 p-2.5 bg-emerald-950/60 rounded-xl border border-emerald-800">
                   <div className="flex items-center gap-2">
                     <Mail className="w-4 h-4 text-teal-400 shrink-0" />
                     <span className="font-bold text-slate-200">{t('ای میل:', 'Email:')}</span>

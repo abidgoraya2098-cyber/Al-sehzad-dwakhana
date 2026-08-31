@@ -22,7 +22,6 @@ export interface HakeemSettings {
   clinicTimingsUr: string;
   clinicTimingsEn: string;
   clinicStatusMode?: 'auto' | 'open' | 'closed';
-  landline?: string;
   visitingCardImage?: string;
 }
 
