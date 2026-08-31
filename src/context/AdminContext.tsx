@@ -87,13 +87,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return {
             ...defaultHakeemSettings,
             ...parsed,
-            nameUr: parsed.nameUr || defaultHakeemSettings.nameUr,
-            nameEn: parsed.nameEn || defaultHakeemSettings.nameEn,
-            avatarUrl: parsed.avatarUrl || '/hakeem-nawaz.jpg',
-            phone: parsed.phone || '0300-6458169',
-            whatsapp: parsed.whatsapp || '923006458169',
-            email: parsed.email || 'nawaznaji012@gmail.com',
-            clinicStatusMode: parsed.clinicStatusMode || 'auto',
+            regNo: parsed.regNo || defaultHakeemSettings.regNo,
+            phcRegNo: parsed.phcRegNo || defaultHakeemSettings.phcRegNo,
           };
         }
       }
@@ -118,7 +113,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return parsed.filter((p) => p && p.id);
         }
       }
       return productsData;
@@ -137,11 +132,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const cloudSettings = await fetchHakeemSettingsFromCloud();
       if (cloudSettings && typeof cloudSettings === 'object') {
         setHakeemSettings((prev) => {
-          const merged = {
-            ...prev,
+          const merged: HakeemSettings = {
+            ...defaultHakeemSettings,
+            ...(prev || {}),
             ...cloudSettings,
-            regNo: cloudSettings.regNo || prev.regNo || 'QH-34430-A',
-            phcRegNo: cloudSettings.phcRegNo || prev.phcRegNo || 'R-63608',
+            regNo: cloudSettings.regNo || prev?.regNo || 'QH-34430-A',
+            phcRegNo: cloudSettings.phcRegNo || prev?.phcRegNo || 'R-63608',
           };
           try {
             localStorage.setItem(SETTINGS_STORAGE_KEY, JSON.stringify(merged));
@@ -153,10 +149,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // 2. Fetch live products
       const cloudProducts = await fetchProductsFromCloud();
       if (cloudProducts && Array.isArray(cloudProducts) && cloudProducts.length > 0) {
-        setProducts(cloudProducts);
-        try {
-          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(cloudProducts));
-        } catch {}
+        const validProds = cloudProducts.filter((p) => p && p.id);
+        if (validProds.length > 0) {
+          setProducts(validProds);
+          try {
+            localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(validProds));
+          } catch {}
+        }
       }
     } catch (e) {
       console.warn('Cloud sync refresh error:', e);

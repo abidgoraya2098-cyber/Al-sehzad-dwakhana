@@ -101,7 +101,7 @@ export const CourseEstimator: React.FC = () => {
       `براہ کرم میرا کورس بک فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
     );
 
-    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
   };
 
   return (

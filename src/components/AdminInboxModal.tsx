@@ -109,19 +109,19 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
 
   // Sync state whenever modal opens or settings change
   useEffect(() => {
-    if (isOpen && hakeemSettings) {
-      setNameUr(hakeemSettings.nameUr || 'حکیم نواز احمد');
-      setNameEn(hakeemSettings.nameEn || 'Hakim Nawaz Ahmad');
-      setTitleUr(hakeemSettings.titleUr || 'حکیم حاذق، ماہر نباض و معالج (رجسٹرڈ)');
-      setDegreeUr(hakeemSettings.degreeUr || 'D.H.M.S, F.T.J, R.M.P');
-      setRegNo(hakeemSettings.regNo || 'QH-34430-A');
-      setPhcRegNo(hakeemSettings.phcRegNo || 'R-63608');
-      setAwardUr(hakeemSettings.awardUr || 'Best Performance Award Holder');
-      setPhone(hakeemSettings.phone || '0300-6458169');
-      setEmail(hakeemSettings.email || 'nawaznaji012@gmail.com');
-      setAddressUr(hakeemSettings.addressUr || 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ');
-      setAvatarUrl(hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg');
-      setClinicStatusModeState(hakeemSettings.clinicStatusMode || 'auto');
+    if (isOpen) {
+      setNameUr(hakeemSettings?.nameUr || 'حکیم نواز احمد');
+      setNameEn(hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad');
+      setTitleUr(hakeemSettings?.titleUr || 'حکیم حاذق، ماہر نباض و معالج (رجسٹرڈ)');
+      setDegreeUr(hakeemSettings?.degreeUr || 'D.H.M.S, F.T.J, R.M.P');
+      setRegNo(hakeemSettings?.regNo || 'QH-34430-A');
+      setPhcRegNo(hakeemSettings?.phcRegNo || 'R-63608');
+      setAwardUr(hakeemSettings?.awardUr || 'Best Performance Award Holder');
+      setPhone(hakeemSettings?.phone || '0300-6458169');
+      setEmail(hakeemSettings?.email || 'nawaznaji012@gmail.com');
+      setAddressUr(hakeemSettings?.addressUr || 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ');
+      setAvatarUrl(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
+      setClinicStatusModeState(hakeemSettings?.clinicStatusMode || 'auto');
     }
   }, [isOpen, hakeemSettings]);
 

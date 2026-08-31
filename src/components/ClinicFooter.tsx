@@ -37,8 +37,8 @@ export const ClinicFooter: React.FC = () => {
             <DawakhanaLogo size={52} />
             <p className="text-xs text-emerald-200 leading-relaxed font-medium">
               {t(
-                `الشہزاد دواخانہ اینڈ ہربل کلینک — ${hakeemSettings.experienceYears} سالہ خاندانی روایت کے تحت خالص قدرتی دیسی جڑی بوٹیوں سے تیار کردہ اکسیر ادویات، حجامہ تھراپی اور آن لائن طبی رہنمائی۔`,
-                `Al-Shehzad Dawakhana & Herbal Clinic — ${hakeemSettings.experienceYears} years of heritage delivering authenticated Unani formulations, Hijama therapy, and online herbal consultations under ${hakeemSettings.nameEn}.`
+                `الشہزاد دواخانہ اینڈ ہربل کلینک — ${hakeemSettings?.experienceYears || '35+'} سالہ خاندانی روایت کے تحت خالص قدرتی دیسی جڑی بوٹیوں سے تیار کردہ اکسیر ادویات، حجامہ تھراپی اور آن لائن طبی رہنمائی۔`,
+                `Al-Shehzad Dawakhana & Herbal Clinic — ${hakeemSettings?.experienceYears || '35+'} years of heritage delivering authenticated Unani formulations, Hijama therapy, and online herbal consultations under ${hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad'}.`
               )}
             </p>
             <ClinicStatusBadge />
@@ -53,7 +53,7 @@ export const ClinicFooter: React.FC = () => {
               <li>
                 <a href="#hakeem-profile" className="hover:text-amber-300 transition-colors flex items-center gap-1.5">
                   <User className="w-3.5 h-3.5 text-amber-400" />
-                  <span>{isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}</span>
+                  <span>{isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')}</span>
                 </a>
               </li>
               <li>
@@ -96,7 +96,7 @@ export const ClinicFooter: React.FC = () => {
                 <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-white block">{t('اوقاتِ کار (ٹائمنگ):', 'Clinic Shift Timings:')}</span>
-                  <span>{isUrdu ? hakeemSettings.clinicTimingsUr : hakeemSettings.clinicTimingsEn}</span>
+                  <span>{isUrdu ? (hakeemSettings?.clinicTimingsUr || 'صبح 10:00 تا 02:00 بجے • شام 04:00 تا 08:00 بجے (جمعہ ناغہ)') : (hakeemSettings?.clinicTimingsEn || '10:00 AM - 02:00 PM & 04:00 PM - 08:00 PM (Friday Closed)')}</span>
                   <span className="text-[10px] text-amber-300/80 block mt-0.5">{t('دوپہر 2 تا 4 بجے وقفہ', 'Break: 02:00 PM to 04:00 PM')}</span>
                 </div>
               </div>
@@ -112,7 +112,7 @@ export const ClinicFooter: React.FC = () => {
               <div className="flex items-start gap-2 pt-2 border-t border-emerald-900 text-[11px]">
                 <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-amber-300 block">NCT: {hakeemSettings.regNo || 'QH-34430-A'} | PHC: {hakeemSettings.phcRegNo || 'R-63608'}</span>
+                  <span className="font-bold text-amber-300 block">NCT: {hakeemSettings?.regNo || 'QH-34430-A'} | PHC: {hakeemSettings?.phcRegNo || 'R-63608'}</span>
                   <span className="text-emerald-300">{t('بیسٹ پرفارمنس ایوارڈ ہولڈر', 'Best Performance Award Holder')}</span>
                 </div>
               </div>

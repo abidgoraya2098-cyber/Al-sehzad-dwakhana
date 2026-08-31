@@ -91,7 +91,7 @@ export const ConsultationModal: React.FC<ConsultationModalProps> = ({
       `📝 *علامات و تفصیل:* ${symptoms}\n` +
       `🖼️ *نسخہ تصویر:* ${prescriptionImage ? 'تصویر فارم میں منسلک کر دی گئی ہے' : 'کوئی تصویر منسلک نہیں'}\n` +
       `-----------------------------------------\n` +
-      `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}! برائے مہربانی میرے کیس کا معائنہ فرما کر مناسب دیسی علاج اور پرہیز تجویز فرمائیں۔ شکریہ!`
+      `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')}! برائے مہربانی میرے کیس کا معائنہ فرما کر مناسب دیسی علاج اور پرہیز تجویز فرمائیں۔ شکریہ!`
     );
 
     setTimeout(() => {

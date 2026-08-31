@@ -151,36 +151,50 @@ const MainAppContent: React.FC = () => {
       </SectionErrorBoundary>
 
       {/* Modals & Drawers */}
-      <ProductDetailModal
-        product={selectedProduct}
-        onClose={() => setSelectedProduct(null)}
-      />
+      <SectionErrorBoundary sectionName="ProductDetailModal">
+        <ProductDetailModal
+          product={selectedProduct}
+          onClose={() => setSelectedProduct(null)}
+        />
+      </SectionErrorBoundary>
 
-      <CartDrawer />
+      <SectionErrorBoundary sectionName="CartDrawer">
+        <CartDrawer />
+      </SectionErrorBoundary>
 
-      <ConsultationModal
-        isOpen={isConsultationOpen}
-        onClose={() => setIsConsultationOpen(false)}
-      />
+      <SectionErrorBoundary sectionName="ConsultationModal">
+        <ConsultationModal
+          isOpen={isConsultationOpen}
+          onClose={() => setIsConsultationOpen(false)}
+        />
+      </SectionErrorBoundary>
 
-      <AppointmentBookingModal
-        isOpen={isAppointmentOpen}
-        defaultService={appointmentService}
-        onClose={() => setIsAppointmentOpen(false)}
-      />
+      <SectionErrorBoundary sectionName="AppointmentBookingModal">
+        <AppointmentBookingModal
+          isOpen={isAppointmentOpen}
+          defaultService={appointmentService}
+          onClose={() => setIsAppointmentOpen(false)}
+        />
+      </SectionErrorBoundary>
 
-      <AdminLoginModal
-        isOpen={isAdminLoginOpen}
-        onClose={() => setIsAdminLoginOpen(false)}
-        onSuccess={() => setIsAdminInboxOpen(true)}
-      />
+      <SectionErrorBoundary sectionName="AdminLoginModal">
+        <AdminLoginModal
+          isOpen={isAdminLoginOpen}
+          onClose={() => setIsAdminLoginOpen(false)}
+          onSuccess={() => setIsAdminInboxOpen(true)}
+        />
+      </SectionErrorBoundary>
 
-      <AdminInboxModal
-        isOpen={isAdminInboxOpen}
-        onClose={() => setIsAdminInboxOpen(false)}
-      />
+      <SectionErrorBoundary sectionName="AdminInboxModal">
+        <AdminInboxModal
+          isOpen={isAdminInboxOpen}
+          onClose={() => setIsAdminInboxOpen(false)}
+        />
+      </SectionErrorBoundary>
 
-      <NotificationModal />
+      <SectionErrorBoundary sectionName="NotificationModal">
+        <NotificationModal />
+      </SectionErrorBoundary>
     </div>
   );
 };

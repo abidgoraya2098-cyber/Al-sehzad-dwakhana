@@ -56,7 +56,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
 
     const serviceName =
       service === 'hakeem_checkup'
-        ? `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn} سے بالمشافہ معائنہ (In-Person Clinic Visit)`
+        ? `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')} سے بالمشافہ معائنہ (In-Person Clinic Visit)`
         : service === 'hijama'
         ? 'حجامہ و کپنگ تھراپی سیشن (Hijama Therapy)'
         : 'لائیو فون / واٹس ایپ کال مشورہ (Live Call Consultation)';
@@ -75,7 +75,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
       `⏰ *ٹائم سلاٹ:* ${slotName}\n` +
       `📝 *نوٹ / بیماری کی نوعیت:* ${notes || 'معمول کا طبی معائنہ'}\n` +
       `-----------------------------------------\n` +
-      `محترم ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn}! برائے مہربانی اپوائنٹمنٹ ٹائم کنفرم فرما دیں۔ شکریہ!`
+      `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')}! برائے مہربانی اپوائنٹمنٹ ٹائم کنفرم فرما دیں۔ شکریہ!`
     );
 
     setTimeout(() => {
