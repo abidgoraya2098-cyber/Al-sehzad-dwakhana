@@ -58,7 +58,7 @@ export const defaultHakeemSettings: HakeemSettings = {
 };
 
 const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v9';
-const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v2';
+const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v5';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 

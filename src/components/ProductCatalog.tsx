@@ -163,10 +163,13 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
                 {/* Product Image Box */}
                 <div className="relative aspect-4/3 overflow-hidden bg-slate-100">
                   <img
-                    src={product.image}
-                    alt={product.nameEn}
+                    src={product.image || '/majoon-shabab-khas.jpg'}
+                    alt={product.nameEn || 'Medicine'}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                     loading="lazy"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/majoon-shabab-khas.jpg';
+                    }}
                   />
 
                   {/* Badges */}

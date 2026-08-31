@@ -67,9 +67,12 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
             <div className="relative aspect-4/3 sm:aspect-square rounded-2xl overflow-hidden bg-slate-100 border border-slate-200">
               <img
-                src={product.image}
-                alt={product.nameEn}
+                src={product.image || '/majoon-shabab-khas.jpg'}
+                alt={product.nameEn || 'Medicine'}
                 className="w-full h-full object-cover"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).src = '/majoon-shabab-khas.jpg';
+                }}
               />
               {product.badgeUr && (
                 <span className="absolute top-3 right-3 px-3 py-1 bg-amber-500 text-emerald-950 text-xs font-black rounded-lg shadow-md">
