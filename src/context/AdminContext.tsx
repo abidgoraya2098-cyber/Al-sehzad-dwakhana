@@ -32,26 +32,31 @@ interface AdminContextType {
 }
 
 export const defaultHakeemSettings: HakeemSettings = {
-  nameUr: 'حکیم محمد نواز احمد',
-  nameEn: 'Hakim Muhammad Nawaz Ahmad',
-  titleUr: 'حکیم حاذق و سینئر نباض',
-  titleEn: 'Chief Physician & Pulse Specialist',
-  degreeUr: 'فاضل الطب والجراحت (F.T.J / B.U.M.S)',
-  degreeEn: 'Faculty of Tibb & Surgery (FTJ / BUMS)',
-  regNo: 'NCT-89423',
-  experienceYears: '30+',
+  nameUr: 'حکیم نواز احمد',
+  nameEn: 'Hakim Nawaz Ahmad',
+  titleUr: 'حکیم حاذق، ماہر نباض و معالج (رجسٹرڈ)',
+  titleEn: 'Chief Herbal Physician & Pulse Specialist (Regd.)',
+  degreeUr: 'D.H.M.S, F.T.J, R.M.P',
+  degreeEn: 'D.H.M.S, F.T.J, R.M.P',
+  regNo: 'QH-34430-A',
+  phcRegNo: 'R-63608',
+  awardUr: 'بیسٹ پرفارمنس ایوارڈ ہولڈر',
+  awardEn: 'Best Performance Award Holder',
+  establishedYear: '1990',
+  experienceYears: '35+',
   avatarUrl: '/hakeem-nawaz.jpg',
+  visitingCardImage: '/hakeem-visiting-card.jpg',
   phone: '0300-6458169',
   whatsapp: '923006458169',
   email: 'nawaznaji012@gmail.com',
-  addressUr: 'الشہزاد دواخانہ اینڈ ہربل کلینک، مین جی ٹی روڈ، گوجرانوالہ، پنجاب، پاکستان',
-  addressEn: 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan',
-  clinicTimingsUr: 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے (جمعہ تعطیل)',
-  clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
+  addressUr: 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ',
+  addressEn: 'Chanda Qila Chowk, Near Naeem Electronics, Gujranwala, Punjab, Pakistan',
+  clinicTimingsUr: 'صبح 10:00 تا 02:00 بجے • شام 04:00 تا 08:00 بجے (جمعہ ناغہ)',
+  clinicTimingsEn: '10:00 AM - 02:00 PM & 04:00 PM - 08:00 PM (Friday Closed)',
   clinicStatusMode: 'auto',
 };
 
-const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v7';
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v9';
 const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v2';
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);

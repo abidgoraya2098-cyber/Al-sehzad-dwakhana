@@ -61,7 +61,7 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
         ? 'حجامہ و کپنگ تھراپی سیشن (Hijama Therapy)'
         : 'لائیو فون / واٹس ایپ کال مشورہ (Live Call Consultation)';
 
-    const slotName = timeSlot === 'morning' ? 'صبح شفٹ (10:00 AM تا 01:00 PM)' : 'شام شفٹ (05:00 PM تا 09:30 PM)';
+    const slotName = timeSlot === 'morning' ? 'صبح شفٹ (10:00 AM تا 02:00 PM)' : 'شام شفٹ (04:00 PM تا 08:00 PM)';
 
     const msg = encodeURIComponent(
       `📅 *الشہزاد دواخانہ — معائنہ و اپوائنٹمنٹ بکنگ کنفرمیشن* 📅\n` +
@@ -214,8 +214,8 @@ export const AppointmentBookingModal: React.FC<AppointmentBookingModalProps> = (
                     onChange={(e) => setTimeSlot(e.target.value as any)}
                     className="w-full text-xs p-3 rounded-xl border border-slate-300 focus:outline-none focus:border-emerald-600 bg-slate-50 font-bold text-slate-900"
                   >
-                    <option value="morning">{t('صبح: 10:00 تا 01:30 بجے', 'Morning: 10:00 AM - 1:30 PM')}</option>
-                    <option value="evening">{t('شام: 05:00 تا 09:30 بجے', 'Evening: 05:00 PM - 9:30 PM')}</option>
+                    <option value="morning">{t('صبح: 10:00 AM تا 02:00 PM', 'Morning: 10:00 AM - 02:00 PM')}</option>
+                    <option value="evening">{t('شام: 04:00 PM تا 08:00 PM', 'Evening: 04:00 PM - 08:00 PM')}</option>
                   </select>
                 </div>
               </div>

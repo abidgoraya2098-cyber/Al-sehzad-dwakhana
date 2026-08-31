@@ -104,7 +104,7 @@ export const Header: React.FC<HeaderProps> = ({
             <ClinicStatusBadge />
             <span className="text-emerald-300">|</span>
             <span className="font-semibold text-emerald-100">
-              {isUrdu ? (hakeemSettings?.clinicTimingsUr || 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے') : (hakeemSettings?.clinicTimingsEn || '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM')}
+              {isUrdu ? (hakeemSettings?.clinicTimingsUr || 'صبح 10:00 تا 02:00 بجے • شام 04:00 تا 08:00 بجے (جمعہ ناغہ)') : (hakeemSettings?.clinicTimingsEn || '10:00 AM - 02:00 PM & 04:00 PM - 08:00 PM (Friday Closed)')}
             </span>
           </div>
 

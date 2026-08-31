@@ -88,8 +88,8 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                 </h2>
               </div>
 
-              {/* Rating and Stock */}
-              <div className="flex items-center gap-3 text-xs">
+              {/* Rating, Stock & Duration */}
+              <div className="flex flex-wrap items-center gap-2 text-xs">
                 <div className="flex items-center gap-1 text-amber-500 font-bold bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">
                   <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
                   <span>{product.rating}</span>
@@ -100,7 +100,21 @@ export const ProductDetailModal: React.FC<ProductDetailModalProps> = ({
                   <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
                   {t('100% مستند و خالص', '100% Genuine')}
                 </span>
+
+                {product.durationUr && (
+                  <span className="flex items-center gap-1 text-amber-900 font-bold bg-amber-100/80 px-2.5 py-1 rounded-lg border border-amber-300">
+                    <Clock className="w-3.5 h-3.5 text-amber-700" />
+                    {isUrdu ? product.durationUr : (product.durationEn || product.durationUr)}
+                  </span>
+                )}
               </div>
+
+              {product.targetAilmentsUr && (
+                <div className="p-2.5 bg-emerald-50/80 border border-emerald-200 rounded-xl text-xs text-emerald-950 font-bold">
+                  <span>🎯 {t('مخصوص برائے:', 'Target Ailments:')} </span>
+                  <span className="font-semibold">{isUrdu ? product.targetAilmentsUr : (product.targetAilmentsEn || product.targetAilmentsUr)}</span>
+                </div>
+              )}
 
               {/* Price & Weight */}
               <div className="p-4 rounded-2xl bg-emerald-50/70 border border-emerald-200/80 flex items-center justify-between">

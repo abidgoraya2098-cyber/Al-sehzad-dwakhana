@@ -89,14 +89,15 @@ export const ClinicFooter: React.FC = () => {
           {/* Col 3: Clinic Timings & Schedule */}
           <div className="space-y-3">
             <h3 className="text-sm font-black text-amber-400 uppercase tracking-widest border-b border-emerald-800 pb-2">
-              {t('کلینک اوقات و معائنہ', 'Clinic Timings')}
+              {t('کلینک اوقات و اسناد', 'Timings & Registrations')}
             </h3>
             <div className="space-y-2 text-xs text-emerald-200 font-medium">
               <div className="flex items-start gap-2">
                 <Clock className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <div>
-                  <span className="font-bold text-white block">{t('صبح و شام اوقات:', 'Clinic Shift Timings:')}</span>
+                  <span className="font-bold text-white block">{t('اوقاتِ کار (ٹائمنگ):', 'Clinic Shift Timings:')}</span>
                   <span>{isUrdu ? hakeemSettings.clinicTimingsUr : hakeemSettings.clinicTimingsEn}</span>
+                  <span className="text-[10px] text-amber-300/80 block mt-0.5">{t('دوپہر 2 تا 4 بجے وقفہ', 'Break: 02:00 PM to 04:00 PM')}</span>
                 </div>
               </div>
 
@@ -104,7 +105,15 @@ export const ClinicFooter: React.FC = () => {
                 <Clock className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
                 <div>
                   <span className="font-bold text-red-300 block">{t('جمعۃ المبارک:', 'Friday:')}</span>
-                  <span>{t('ہفتہ وار تعطیل (آن لائن ایمرجنسی دستیاب)', 'Weekly Holiday (Online emergency available)')}</span>
+                  <span>{t('ہفتہ وار ناغہ (آن لائن مشورہ دستیاب)', 'Weekly Off (Online Available)')}</span>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-2 pt-2 border-t border-emerald-900 text-[11px]">
+                <ShieldCheck className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div>
+                  <span className="font-bold text-amber-300 block">NCT: {hakeemSettings.regNo || 'QH-34430-A'} | PHC: {hakeemSettings.phcRegNo || 'R-63608'}</span>
+                  <span className="text-emerald-300">{t('بیسٹ پرفارمنس ایوارڈ ہولڈر', 'Best Performance Award Holder')}</span>
                 </div>
               </div>
             </div>
@@ -119,7 +128,7 @@ export const ClinicFooter: React.FC = () => {
               <div className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
                 <span>
-                  {isUrdu ? (hakeemSettings?.addressUr || 'الشہزاد دواخانہ اینڈ ہربل کلینک، گوجرانوالہ') : (hakeemSettings?.addressEn || 'Al-Shehzad Dawakhana, Gujranwala')}
+                  {isUrdu ? (hakeemSettings?.addressUr || 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ') : (hakeemSettings?.addressEn || 'Chanda Qila Chowk, Near Naeem Electronics, Gujranwala')}
                 </span>
               </div>
 
