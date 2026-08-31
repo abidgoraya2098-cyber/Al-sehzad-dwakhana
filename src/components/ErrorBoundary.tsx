@@ -24,25 +24,33 @@ export class ErrorBoundary extends Component<Props, State> {
     console.error('Uncaught error in Dawakhana App:', error, errorInfo);
   }
 
-  private handleHardReset = () => {
+  private handleHardReset = async () => {
     try {
       localStorage.clear();
       sessionStorage.clear();
       if ('caches' in window) {
-        caches.keys().then((names) => {
-          names.forEach((name) => caches.delete(name));
-        });
+        const names = await caches.keys();
+        await Promise.all(names.map((name) => caches.delete(name)));
       }
       if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then((registrations) => {
-          registrations.forEach((r) => r.unregister());
-        });
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((r) => r.unregister()));
       }
     } catch (e) {
-      console.warn(e);
+      console.warn('Reset error:', e);
     }
-    // Force bypass browser cache and reload fresh bundle
-    window.location.href = window.location.origin + '/?cache_bust=' + Date.now();
+
+    this.setState({ hasError: false, error: null });
+
+    try {
+      window.location.reload();
+    } catch {
+      window.location.href = window.location.href.split('?')[0] + '?restore=' + Date.now();
+    }
+  };
+
+  private handleQuickRetry = () => {
+    this.setState({ hasError: false, error: null });
   };
 
   public render() {
@@ -62,10 +70,17 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="flex flex-wrap items-center justify-center gap-3">
             <button
               onClick={this.handleHardReset}
-              className="px-6 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-black text-sm flex items-center gap-2 shadow-xl transition-all cursor-pointer border border-emerald-600"
+              className="px-6 py-3.5 rounded-xl bg-emerald-800 hover:bg-emerald-700 text-white font-black text-sm flex items-center gap-2 shadow-xl transition-all cursor-pointer border border-emerald-600 active:scale-95"
             >
               <RotateCcw className="w-4 h-4 text-amber-400" />
               <span>ایپ کو فوری بحال کریں (Restore App Now)</span>
+            </button>
+            <button
+              onClick={this.handleQuickRetry}
+              className="px-5 py-3.5 rounded-xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm flex items-center gap-2 shadow border border-slate-300 transition-all cursor-pointer active:scale-95"
+            >
+              <RefreshCw className="w-4 h-4 text-emerald-700" />
+              <span>دوبارہ کوشش کریں (Retry)</span>
             </button>
           </div>
 

@@ -67,7 +67,7 @@ export const CourseEstimator: React.FC = () => {
     },
   };
 
-  const selectedData = conditionsMap[condition];
+  const selectedData = conditionsMap[condition] || conditionsMap.vitality;
   const price =
     duration === '15_days'
       ? selectedData.basePrice15

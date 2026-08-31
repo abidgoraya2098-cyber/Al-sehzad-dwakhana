@@ -204,7 +204,7 @@ export const MizajQuiz: React.FC<MizajQuizProps> = ({ onSelectProduct }) => {
     setResult(null);
   };
 
-  const currentQ = quizQuestions[currentStep];
+  const currentQ = quizQuestions[currentStep] || quizQuestions[0];
 
   return (
     <section id="mizaj-quiz" className="py-14 bg-gradient-to-b from-emerald-50/50 via-white to-emerald-50/30">

@@ -66,15 +66,15 @@ export const ProductCatalog: React.FC<ProductCatalogProps> = ({
 
   const handleWhatsAppInstantOrder = (product: Product, e: React.MouseEvent) => {
     e.stopPropagation();
-    const productName = isUrdu ? product.nameUr : product.nameEn;
+    const productName = isUrdu ? (product.nameUr || product.nameEn) : (product.nameEn || product.nameUr);
     const msg = encodeURIComponent(
       `السلام علیکم! میں الشہزاد دواخانہ سے درج ذیل پراڈکٹ آرڈر کرنا چاہتا ہوں:\n\n` +
       `📦 دوا کا نام: ${productName}\n` +
       `💰 قیمت: Rs. ${product.price}\n` +
-      `⚖️ وزن / پیکنگ: ${isUrdu ? product.weightUr : product.weight}\n\n` +
+      `⚖️ وزن / پیکنگ: ${isUrdu ? (product.weightUr || product.weight) : product.weight}\n\n` +
       `برائے مہربانی ڈلیوری کا طریقہ کار اور کنفرمیشن فرمائیں۔ شکریہ!`
     );
-    window.open(`https://wa.me/${hakeemSettings.whatsapp}?text=${msg}`, '_blank');
+    window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
   };
 
   return (

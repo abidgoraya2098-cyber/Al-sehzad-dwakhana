@@ -19,7 +19,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [cart, setCart] = useState<CartItem[]>(() => {
     try {
       const saved = localStorage.getItem('app_cart');
-      return saved ? JSON.parse(saved) : [];
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed)) {
+          return parsed.filter(
+            (item): item is CartItem =>
+              Boolean(item && item.product && item.product.id && typeof item.quantity === 'number')
+          );
+        }
+      }
+      return [];
     } catch {
       return [];
     }
@@ -36,31 +45,42 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const addToCart = (product: Product, quantity = 1) => {
     if (!product || !product.id) return;
     setCart((prev) => {
-      const existing = prev.find((item) => item.product.id === product.id);
+      const safePrev = Array.isArray(prev) ? prev.filter((item) => item && item.product && item.product.id) : [];
+      const existing = safePrev.find((item) => item.product.id === product.id);
       if (existing) {
-        return prev.map((item) =>
+        return safePrev.map((item) =>
           item.product.id === product.id
-            ? { ...item, quantity: item.quantity + quantity }
+            ? { ...item, quantity: (item.quantity || 1) + quantity }
             : item
         );
       }
-      return [...prev, { product, quantity }];
+      return [...safePrev, { product, quantity }];
     });
   };
 
   const removeFromCart = (productId: string) => {
-    setCart((prev) => prev.filter((item) => item.product.id !== productId));
+    if (!productId) return;
+    setCart((prev) =>
+      Array.isArray(prev)
+        ? prev.filter((item) => item && item.product && item.product.id !== productId)
+        : []
+    );
   };
 
   const updateQuantity = (productId: string, quantity: number) => {
+    if (!productId) return;
     if (quantity <= 0) {
       removeFromCart(productId);
       return;
     }
     setCart((prev) =>
-      prev.map((item) =>
-        item.product.id === productId ? { ...item, quantity } : item
-      )
+      Array.isArray(prev)
+        ? prev
+            .filter((item) => item && item.product && item.product.id)
+            .map((item) =>
+              item.product.id === productId ? { ...item, quantity } : item
+            )
+        : []
     );
   };
 
@@ -68,8 +88,9 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setCart([]);
   };
 
-  const totalItems = cart.reduce((sum, item) => sum + (item.quantity || 0), 0);
-  const totalPrice = cart.reduce(
+  const safeCart = Array.isArray(cart) ? cart.filter((item) => item && item.product && item.product.id) : [];
+  const totalItems = safeCart.reduce((sum, item) => sum + (item.quantity || 0), 0);
+  const totalPrice = safeCart.reduce(
     (sum, item) => sum + ((item.product?.price || 0) * (item.quantity || 0)),
     0
   );
@@ -77,7 +98,7 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
   return (
     <CartContext.Provider
       value={{
-        cart,
+        cart: safeCart,
         addToCart,
         removeFromCart,
         updateQuantity,
