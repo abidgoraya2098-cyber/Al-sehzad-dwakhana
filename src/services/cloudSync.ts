@@ -8,6 +8,10 @@ const API_BASE = 'https://api.restful-api.dev/objects';
 const HAKEEM_SETTINGS_DOC_ID = 'ff808181a04ccf2d01a052dc28de1776';
 const PRODUCTS_DOC_ID = 'ff808181a04ccf2d01a052dc72b21777';
 
+export const liveSyncChannel = typeof window !== 'undefined' && 'BroadcastChannel' in window
+  ? new BroadcastChannel('al_shehzad_sync_channel')
+  : null;
+
 export interface CloudInventoryPayload {
   overrides?: Record<string, { price?: number; inStock?: boolean }>;
   customProducts?: Product[];
@@ -49,6 +53,9 @@ export async function syncHakeemSettingsToCloud(settings: HakeemSettings): Promi
         }
       })
     });
+    if (liveSyncChannel) {
+      liveSyncChannel.postMessage({ type: 'SETTINGS_UPDATED', data: settings });
+    }
     return res.ok;
   } catch (err) {
     console.error('CloudSync: Failed to upload Hakeem settings to cloud:', err);
@@ -109,6 +116,9 @@ export async function syncProductsToCloud(allProducts: Product[]): Promise<boole
         }
       })
     });
+    if (liveSyncChannel) {
+      liveSyncChannel.postMessage({ type: 'PRODUCTS_UPDATED', data: allProducts });
+    }
     return res.ok;
   } catch (err) {
     console.error('CloudSync: Failed to upload products to cloud:', err);

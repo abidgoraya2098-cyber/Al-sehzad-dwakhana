@@ -8,6 +8,10 @@ export interface HakeemSettings {
   degreeUr: string;
   degreeEn: string;
   regNo: string;
+  phcRegNo?: string;
+  awardUr?: string;
+  awardEn?: string;
+  establishedYear?: string;
   experienceYears: string;
   avatarUrl: string;
   phone: string;
@@ -18,7 +22,7 @@ export interface HakeemSettings {
   clinicTimingsUr: string;
   clinicTimingsEn: string;
   clinicStatusMode?: 'auto' | 'open' | 'closed';
-  landline?: string;
+  visitingCardImage?: string;
 }
 
 export interface Product {

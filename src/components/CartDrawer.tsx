@@ -41,12 +41,18 @@ export const CartDrawer: React.FC = () => {
 
   const handleWhatsAppCheckout = (e: React.FormEvent) => {
     e.preventDefault();
-    if (cart.length === 0) return;
+    if (!cart || cart.length === 0) return;
 
-    const itemsSummary = cart
+    const validItems = cart.filter((item) => item && item.product && item.product.id);
+    if (validItems.length === 0) return;
+
+    const itemsSummary = validItems
       .map((item, idx) => {
-        const pName = isUrdu ? item.product.nameUr : item.product.nameEn;
-        return `${idx + 1}. ${pName} (${isUrdu ? item.product.weightUr : item.product.weight}) × ${item.quantity} = Rs. ${item.product.price * item.quantity}`;
+        const pName = isUrdu ? (item.product.nameUr || item.product.nameEn) : (item.product.nameEn || item.product.nameUr);
+        const pWeight = isUrdu ? (item.product.weightUr || item.product.weight || '') : (item.product.weight || item.product.weightUr || '');
+        const pPrice = Number(item.product.price) || 0;
+        const pQty = Number(item.quantity) || 1;
+        return `${idx + 1}. ${pName} (${pWeight}) × ${pQty} = Rs. ${pPrice * pQty}`;
       })
       .join('\n');
 
@@ -64,7 +70,7 @@ export const CartDrawer: React.FC = () => {
       `🚚 *ڈلیوری چارجز:* ${deliveryCharges === 0 ? 'مفت (Free)' : `Rs. ${deliveryCharges}`}\n` +
       `💰 *کل رقم (Grand Total):* Rs. ${grandTotal}\n` +
       `-----------------------------------------\n` +
-      `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم محمد نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad')}! برائے مہربانی میرا آرڈر کنفرم فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
+      `محترم ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')}! برائے مہربانی میرا آرڈر کنفرم فرمائیں اور پارسل کیش آن ڈلیوری پر روانہ فرمائیں۔ شکریہ!`
     );
 
     window.open(`https://wa.me/${hakeemSettings?.whatsapp || '923006458169'}?text=${msg}`, '_blank');
@@ -109,7 +115,7 @@ export const CartDrawer: React.FC = () => {
 
         {/* Cart Items List */}
         <div className="flex-1 overflow-y-auto p-4 space-y-3">
-          {cart.length === 0 ? (
+          {(!cart || cart.filter((item) => item && item.product && item.product.id).length === 0) ? (
             <div className="text-center py-20">
               <ShoppingBag className="w-12 h-12 text-slate-300 mx-auto mb-3" />
               <p className="text-sm font-bold text-slate-600">
@@ -120,57 +126,62 @@ export const CartDrawer: React.FC = () => {
               </p>
             </div>
           ) : (
-            cart.map((item) => (
-              <div
-                key={item.product.id}
-                className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50/50"
-              >
-                <img
-                  src={item.product.image}
-                  alt={item.product.nameEn}
-                  className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0"
-                />
+            cart
+              .filter((item) => item && item.product && item.product.id)
+              .map((item) => (
+                <div
+                  key={item.product.id}
+                  className="flex items-center gap-3 p-3 rounded-2xl border border-slate-200 bg-slate-50/50"
+                >
+                  <img
+                    src={item.product.image || '/hakeem-photo.jpg'}
+                    alt={item.product.nameEn || 'Medicine'}
+                    className="w-16 h-16 rounded-xl object-cover border border-slate-200 shrink-0"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = '/hakeem-photo.jpg';
+                    }}
+                  />
 
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
-                    {isUrdu ? item.product.nameUr : item.product.nameEn}
-                  </h4>
-                  <span className="text-xs text-slate-500 block">
-                    {isUrdu ? item.product.weightUr : item.product.weight}
-                  </span>
-                  <span className="text-xs sm:text-sm font-black text-emerald-900 block mt-0.5">
-                    Rs. {(item.product.price * item.quantity).toLocaleString()}
-                  </span>
-                </div>
+                  <div className="flex-1 min-w-0">
+                    <h4 className="text-xs sm:text-sm font-bold text-slate-900 truncate">
+                      {isUrdu ? (item.product.nameUr || item.product.nameEn) : (item.product.nameEn || item.product.nameUr)}
+                    </h4>
+                    <span className="text-xs text-slate-500 block">
+                      {isUrdu ? (item.product.weightUr || item.product.weight || '') : (item.product.weight || item.product.weightUr || '')}
+                    </span>
+                    <span className="text-xs sm:text-sm font-black text-emerald-900 block mt-0.5">
+                      Rs. {((Number(item.product.price) || 0) * (Number(item.quantity) || 1)).toLocaleString()}
+                    </span>
+                  </div>
 
-                {/* Quantity Controls */}
-                <div className="flex flex-col items-end gap-2">
-                  <button
-                    onClick={() => removeFromCart(item.product.id)}
-                    className="text-slate-400 hover:text-red-500 p-1 transition-colors"
-                    title={t('حذف کریں', 'Remove')}
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
-
-                  <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
+                  {/* Quantity Controls */}
+                  <div className="flex flex-col items-end gap-2">
                     <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity - 1)}
-                      className="px-2 py-0.5 hover:bg-slate-100 text-slate-600 text-xs font-bold"
+                      onClick={() => removeFromCart(item.product.id)}
+                      className="text-slate-400 hover:text-red-500 p-1 transition-colors"
+                      title={t('حذف کریں', 'Remove')}
                     >
-                      <Minus className="w-3 h-3" />
+                      <Trash2 className="w-4 h-4" />
                     </button>
-                    <span className="px-2 text-xs font-bold">{item.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(item.product.id, item.quantity + 1)}
-                      className="px-2 py-0.5 hover:bg-slate-100 text-slate-600 text-xs font-bold"
-                    >
-                      <Plus className="w-3 h-3" />
-                    </button>
+
+                    <div className="flex items-center border border-slate-300 rounded-lg overflow-hidden bg-white">
+                      <button
+                        onClick={() => updateQuantity(item.product.id, (item.quantity || 1) - 1)}
+                        className="px-2 py-0.5 hover:bg-slate-100 text-slate-600 text-xs font-bold"
+                      >
+                        <Minus className="w-3 h-3" />
+                      </button>
+                      <span className="px-2 text-xs font-bold">{item.quantity || 1}</span>
+                      <button
+                        onClick={() => updateQuantity(item.product.id, (item.quantity || 1) + 1)}
+                        className="px-2 py-0.5 hover:bg-slate-100 text-slate-600 text-xs font-bold"
+                      >
+                        <Plus className="w-3 h-3" />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              ))
           )}
         </div>
 

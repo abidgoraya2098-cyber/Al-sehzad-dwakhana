@@ -68,15 +68,17 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
   const [selectedStatus, setSelectedStatus] = useState<'all' | 'new' | 'in_progress' | 'completed'>('all');
   const [previewImage, setPreviewImage] = useState<string | null>(null);
 
-  // Form State for Hakeem Profile Edit with safe defaults
-  const [nameUr, setNameUr] = useState(hakeemSettings?.nameUr || 'حکیم محمد نواز احمد');
-  const [nameEn, setNameEn] = useState(hakeemSettings?.nameEn || 'Hakim Muhammad Nawaz Ahmad');
-  const [titleUr, setTitleUr] = useState(hakeemSettings?.titleUr || 'حکیم حاذق و سینئر نباض');
-  const [degreeUr, setDegreeUr] = useState(hakeemSettings?.degreeUr || 'فاضل الطب والجراحت (F.T.J / B.U.M.S)');
-  const [regNo, setRegNo] = useState(hakeemSettings?.regNo || 'NCT-89423');
+  // Form State for Hakeem Profile Edit with safe defaults from Visiting Card
+  const [nameUr, setNameUr] = useState(hakeemSettings?.nameUr || 'حکیم نواز احمد');
+  const [nameEn, setNameEn] = useState(hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad');
+  const [titleUr, setTitleUr] = useState(hakeemSettings?.titleUr || 'حکیم حاذق، ماہر نباض و معالج (رجسٹرڈ)');
+  const [degreeUr, setDegreeUr] = useState(hakeemSettings?.degreeUr || 'D.H.M.S, F.T.J, R.M.P');
+  const [regNo, setRegNo] = useState(hakeemSettings?.regNo || 'QH-34430-A');
+  const [phcRegNo, setPhcRegNo] = useState(hakeemSettings?.phcRegNo || 'R-63608');
+  const [awardUr, setAwardUr] = useState(hakeemSettings?.awardUr || 'Best Performance Award Holder');
   const [phone, setPhone] = useState(hakeemSettings?.phone || '0300-6458169');
   const [email, setEmail] = useState(hakeemSettings?.email || 'nawaznaji012@gmail.com');
-  const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'الشہزاد دواخانہ، مین چوک چندا قلعہ بائی پاس، گوجرانوالہ');
+  const [addressUr, setAddressUr] = useState(hakeemSettings?.addressUr || 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ');
   const [avatarUrl, setAvatarUrl] = useState(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
   const [clinicStatusModeState, setClinicStatusModeState] = useState<'auto' | 'open' | 'closed'>(hakeemSettings?.clinicStatusMode || 'auto');
 
@@ -107,17 +109,19 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
 
   // Sync state whenever modal opens or settings change
   useEffect(() => {
-    if (isOpen && hakeemSettings) {
-      setNameUr(hakeemSettings.nameUr || 'حکیم محمد نواز احمد');
-      setNameEn(hakeemSettings.nameEn || 'Hakim Muhammad Nawaz Ahmad');
-      setTitleUr(hakeemSettings.titleUr || 'حکیم حاذق و سینئر نباض');
-      setDegreeUr(hakeemSettings.degreeUr || 'فاضل الطب والجراحت (F.T.J / B.U.M.S)');
-      setRegNo(hakeemSettings.regNo || 'NCT-89423');
-      setPhone(hakeemSettings.phone || '0300-6458169');
-      setEmail(hakeemSettings.email || 'nawaznaji012@gmail.com');
-      setAddressUr(hakeemSettings.addressUr || 'الشہزاد دواخانہ، مین چوک چندا قلعہ بائی پاس، گوجرانوالہ');
-      setAvatarUrl(hakeemSettings.avatarUrl || '/hakeem-nawaz.jpg');
-      setClinicStatusModeState(hakeemSettings.clinicStatusMode || 'auto');
+    if (isOpen) {
+      setNameUr(hakeemSettings?.nameUr || 'حکیم نواز احمد');
+      setNameEn(hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad');
+      setTitleUr(hakeemSettings?.titleUr || 'حکیم حاذق، ماہر نباض و معالج (رجسٹرڈ)');
+      setDegreeUr(hakeemSettings?.degreeUr || 'D.H.M.S, F.T.J, R.M.P');
+      setRegNo(hakeemSettings?.regNo || 'QH-34430-A');
+      setPhcRegNo(hakeemSettings?.phcRegNo || 'R-63608');
+      setAwardUr(hakeemSettings?.awardUr || 'Best Performance Award Holder');
+      setPhone(hakeemSettings?.phone || '0300-6458169');
+      setEmail(hakeemSettings?.email || 'nawaznaji012@gmail.com');
+      setAddressUr(hakeemSettings?.addressUr || 'چندا قلعہ چوک نزد نعیم الیکٹرونکس گوجرانوالہ');
+      setAvatarUrl(hakeemSettings?.avatarUrl || '/hakeem-nawaz.jpg');
+      setClinicStatusModeState(hakeemSettings?.clinicStatusMode || 'auto');
     }
   }, [isOpen, hakeemSettings]);
 
@@ -152,6 +156,8 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
       titleUr,
       degreeUr,
       regNo,
+      phcRegNo,
+      awardUr,
       phone,
       email,
       addressUr,
@@ -935,14 +941,43 @@ export const AdminInboxModal: React.FC<AdminInboxModalProps> = ({
 
               <div>
                 <label className="text-xs font-bold text-slate-800 block mb-1">
-                  {t('رجسٹریشن نمبر *:', 'Registration No *:')}
+                  {t('نیشنل کونسل طب نمبر *:', 'NCT Reg No *:')}
                 </label>
                 <input
                   type="text"
                   value={regNo}
                   onChange={(e) => setRegNo(e.target.value)}
                   className="w-full text-xs p-3 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 font-mono"
-                  placeholder="e.g. NCT-89423"
+                  placeholder="e.g. QH-34430-A"
+                />
+              </div>
+            </div>
+
+            {/* PHC & Award */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="text-xs font-bold text-slate-800 block mb-1">
+                  {t('پنجاب ہیلتھ کیئر کمیشن نمبر:', 'Punjab Health Commission Reg:')}
+                </label>
+                <input
+                  type="text"
+                  value={phcRegNo}
+                  onChange={(e) => setPhcRegNo(e.target.value)}
+                  className="w-full text-xs p-3 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600 font-mono"
+                  placeholder="e.g. R-63608"
+                />
+              </div>
+
+              <div>
+                <label className="text-xs font-bold text-slate-800 block mb-1">
+                  {t('ایوارڈ / اعزاز:', 'Award Title:')}
+                </label>
+                <input
+                  type="text"
+                  value={awardUr}
+                  onChange={(e) => setAwardUr(e.target.value)}
+                  className="w-full text-xs p-3 rounded-xl border border-slate-300 font-bold focus:outline-none focus:border-emerald-600"
+                  placeholder="e.g. Best Performance Award Holder"
                 />
               </div>
             </div>

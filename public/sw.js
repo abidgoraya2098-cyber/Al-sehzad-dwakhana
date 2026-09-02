@@ -1,5 +1,5 @@
 // Al-Shehzad Dawakhana & Herbal Clinic — Offline Service Worker
-const CACHE_NAME = 'al-shehzad-offline-v3';
+const CACHE_NAME = 'al-shehzad-offline-v6';
 
 const PRECACHE_ASSETS = [
   '/',

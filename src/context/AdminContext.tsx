@@ -1,41 +1,45 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
-import { ConsultationSubmission, HakeemSettings, Product } from '../types';
+import { HakeemSettings, ConsultationSubmission, Product } from '../types';
 import { productsData } from '../data/products';
 import {
   fetchHakeemSettingsFromCloud,
   syncHakeemSettingsToCloud,
   fetchProductsFromCloud,
   syncProductsToCloud,
+  liveSyncChannel,
 } from '../services/cloudSync';
 
 interface AdminContextType {
   isAdminLoggedIn: boolean;
   loginAdmin: (pass: string) => boolean;
   logoutAdmin: () => void;
+  adminPassword: string;
   updateAdminPassword: (newPass: string) => boolean;
   hakeemSettings: HakeemSettings;
   updateHakeemSettings: (newSettings: Partial<HakeemSettings>) => void;
   setClinicStatusMode: (mode: 'auto' | 'open' | 'closed') => void;
   consultations: ConsultationSubmission[];
-  addConsultation: (consultation: Omit<ConsultationSubmission, 'id' | 'timestamp' | 'status'>) => void;
-  updateConsultationStatus: (id: string, status: 'new' | 'in_progress' | 'completed') => void;
+  addConsultation: (submission: Omit<ConsultationSubmission, 'id' | 'createdAt' | 'status'>) => void;
+  updateConsultationStatus: (id: string, status: ConsultationSubmission['status']) => void;
   deleteConsultation: (id: string) => void;
+  // Product Catalog & Inventory Management
   products: Product[];
   addProduct: (product: Product) => void;
   updateProduct: (product: Product) => void;
-  updateProductPrice: (id: string, newPrice: number) => void;
+  updateProductPrice: (id: string, price: number) => void;
   updateProductStock: (id: string, inStock: boolean) => void;
   deleteProduct: (id: string) => void;
   resetProductsToDefault: () => void;
+  // Cloud Sync
   isCloudSyncing: boolean;
   refreshFromCloud: () => Promise<void>;
 }
 
-export const defaultHakeemSettings: HakeemSettings = {
+const defaultHakeemSettings: HakeemSettings = {
   nameUr: 'حکیم محمد نواز احمد',
   nameEn: 'Hakim Muhammad Nawaz Ahmad',
   titleUr: 'حکیم حاذق و سینئر نباض',
-  titleEn: 'Chief Physician & Pulse Specialist',
+  titleEn: 'Senior Unani Physician & Clinical Herbalist',
   degreeUr: 'فاضل الطب والجراحت (F.T.J / B.U.M.S)',
   degreeEn: 'Faculty of Tibb & Surgery (FTJ / BUMS)',
   regNo: 'NCT-89423',
@@ -44,15 +48,16 @@ export const defaultHakeemSettings: HakeemSettings = {
   phone: '0300-6458169',
   whatsapp: '923006458169',
   email: 'nawaznaji012@gmail.com',
-  addressUr: 'الشہزاد دواخانہ اینڈ ہربل کلینک، مین جی ٹی روڈ، گوجرانوالہ، پنجاب، پاکستان',
-  addressEn: 'Al-Shehzad Dawakhana & Clinic, Main GT Road, Gujranwala, Punjab, Pakistan',
-  clinicTimingsUr: 'صبح 09:00 تا 01:30 بجے • شام 04:30 تا 10:30 بجے (جمعہ تعطیل)',
-  clinicTimingsEn: '09:00 AM - 01:30 PM & 04:30 PM - 10:30 PM (Friday Closed)',
+  addressUr: 'الشہزاد دواخانہ، مین چوک چندا قلعہ بائی پاس، گوجرانوالہ',
+  addressEn: 'Al-Shehzad Dawakhana, Main Chowk Chanda Qila Bypass, Gujranwala',
+  clinicTimingsUr: 'صبح 10:00 تا رات 9:00 (جمعہ وقفہ)',
+  clinicTimingsEn: '10:00 AM - 09:00 PM (Fri Break)',
   clinicStatusMode: 'auto',
+  landline: '055-4290297',
 };
 
-const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v7';
-const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v3';
+const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v8';
+const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v4';
 
 const mergeProductsWithDefaults = (
   overrides?: Record<string, { price?: number; inStock?: boolean }>,
@@ -190,7 +195,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   }, []);
 
-  // Sync on startup and when user returns to window/tab
+  // Sync on startup, when user returns to window/tab, and listen to BroadcastChannel
   useEffect(() => {
     refreshFromCloud();
 
@@ -199,6 +204,16 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         refreshFromCloud();
       }
     };
+
+    if (liveSyncChannel) {
+      liveSyncChannel.onmessage = (event) => {
+        if (event.data?.type === 'SETTINGS_UPDATED') {
+          setHakeemSettings((prev) => ({ ...prev, ...event.data.data }));
+        } else if (event.data?.type === 'PRODUCTS_UPDATED') {
+          setProducts(event.data.data);
+        }
+      };
+    }
 
     const interval = setInterval(refreshFromCloud, 30000); // Check every 30 seconds
     document.addEventListener('visibilitychange', handleVisibilityChange);
@@ -253,34 +268,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const updateAdminPassword = (newPass: string): boolean => {
     if (!newPass || newPass.trim().length < 4) return false;
-    const cleanPass = newPass.trim();
-    setAdminPassword(cleanPass);
+    setAdminPassword(newPass.trim());
     try {
-      localStorage.setItem('dawakhana_admin_pass', cleanPass);
+      localStorage.setItem('dawakhana_admin_pass', newPass.trim());
     } catch {}
     return true;
   };
 
   const updateHakeemSettings = (newSettings: Partial<HakeemSettings>) => {
     setHakeemSettings((prev) => {
-      const phoneStr = newSettings.phone || prev.phone || '0300-6458169';
-      const cleanWhatsapp = phoneStr.replace(/\D/g, '') || '923006458169';
-
-      const updated: HakeemSettings = {
-        ...prev,
-        ...newSettings,
-        phone: phoneStr,
-        whatsapp: newSettings.whatsapp || (cleanWhatsapp.startsWith('92') ? cleanWhatsapp : `92${cleanWhatsapp.replace(/^0+/, '')}`),
-        email: newSettings.email || prev.email || 'nawaznaji012@gmail.com',
-        avatarUrl: newSettings.avatarUrl || prev.avatarUrl || '/hakeem-nawaz.jpg',
-        clinicStatusMode: newSettings.clinicStatusMode || prev.clinicStatusMode || 'auto',
-      };
-
-      // Broadcast to cloud store immediately so all visitors get the update
-      syncHakeemSettingsToCloud(updated).catch((err) => {
-        console.warn('Failed to broadcast settings to cloud:', err);
-      });
-
+      const updated = { ...prev, ...newSettings };
+      // Broadcast to Cloud in real-time
+      syncHakeemSettingsToCloud(updated);
       return updated;
     });
   };
@@ -289,48 +288,52 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     updateHakeemSettings({ clinicStatusMode: mode });
   };
 
-  const addConsultation = (consultation: Omit<ConsultationSubmission, 'id' | 'timestamp' | 'status'>) => {
+  const addConsultation = (
+    submission: Omit<ConsultationSubmission, 'id' | 'createdAt' | 'status'>
+  ) => {
     const newEntry: ConsultationSubmission = {
-      ...consultation,
-      id: 'cons_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5),
-      timestamp: new Date().toISOString(),
+      ...submission,
+      id: `case_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: new Date().toISOString(),
       status: 'new',
     };
     setConsultations((prev) => [newEntry, ...prev]);
   };
 
-  const updateConsultationStatus = (id: string, status: 'new' | 'in_progress' | 'completed') => {
+  const updateConsultationStatus = (
+    id: string,
+    status: ConsultationSubmission['status']
+  ) => {
     setConsultations((prev) =>
-      prev.map((c) => (c.id === id ? { ...c, status } : c))
+      prev.map((item) => (item.id === id ? { ...item, status } : item))
     );
   };
 
   const deleteConsultation = (id: string) => {
-    setConsultations((prev) => prev.filter((c) => c.id !== id));
+    setConsultations((prev) => prev.filter((item) => item.id !== id));
   };
 
-  // Medicine Inventory Management Functions with Instant Cloud Sync
-  const addProduct = (newProduct: Product) => {
+  // Product Inventory Actions (Dual Local + Cloud Sync)
+  const addProduct = (product: Product) => {
     setProducts((prev) => {
-      const updated = [newProduct, ...prev];
-      syncProductsToCloud(updated).catch(console.warn);
+      const updated = [product, ...prev];
+      syncProductsToCloud(updated);
       return updated;
     });
   };
 
-  const updateProduct = (updatedProduct: Product) => {
+  const updateProduct = (product: Product) => {
     setProducts((prev) => {
-      const updated = prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p));
-      syncProductsToCloud(updated).catch(console.warn);
+      const updated = prev.map((p) => (p.id === product.id ? product : p));
+      syncProductsToCloud(updated);
       return updated;
     });
   };
 
-  const updateProductPrice = (id: string, newPrice: number) => {
-    const validPrice = Math.max(0, Math.round(newPrice));
+  const updateProductPrice = (id: string, price: number) => {
     setProducts((prev) => {
-      const updated = prev.map((p) => (p.id === id ? { ...p, price: validPrice } : p));
-      syncProductsToCloud(updated).catch(console.warn);
+      const updated = prev.map((p) => (p.id === id ? { ...p, price } : p));
+      syncProductsToCloud(updated);
       return updated;
     });
   };
@@ -338,7 +341,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const updateProductStock = (id: string, inStock: boolean) => {
     setProducts((prev) => {
       const updated = prev.map((p) => (p.id === id ? { ...p, inStock } : p));
-      syncProductsToCloud(updated).catch(console.warn);
+      syncProductsToCloud(updated);
       return updated;
     });
   };
@@ -346,14 +349,14 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const deleteProduct = (id: string) => {
     setProducts((prev) => {
       const updated = prev.filter((p) => p.id !== id);
-      syncProductsToCloud(updated).catch(console.warn);
+      syncProductsToCloud(updated);
       return updated;
     });
   };
 
   const resetProductsToDefault = () => {
     setProducts(productsData);
-    syncProductsToCloud(productsData).catch(console.warn);
+    syncProductsToCloud(productsData);
   };
 
   return (
@@ -362,6 +365,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         isAdminLoggedIn,
         loginAdmin,
         logoutAdmin,
+        adminPassword,
         updateAdminPassword,
         hakeemSettings,
         updateHakeemSettings,
@@ -389,28 +393,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 export const useAdmin = () => {
   const context = useContext(AdminContext);
   if (!context) {
-    return {
-      isAdminLoggedIn: false,
-      loginAdmin: () => false,
-      logoutAdmin: () => {},
-      updateAdminPassword: () => false,
-      hakeemSettings: defaultHakeemSettings,
-      updateHakeemSettings: () => {},
-      setClinicStatusMode: () => {},
-      consultations: [],
-      addConsultation: () => {},
-      updateConsultationStatus: () => {},
-      deleteConsultation: () => {},
-      products: productsData,
-      addProduct: () => {},
-      updateProduct: () => {},
-      updateProductPrice: () => {},
-      updateProductStock: () => {},
-      deleteProduct: () => {},
-      resetProductsToDefault: () => {},
-      isCloudSyncing: false,
-      refreshFromCloud: async () => {},
-    };
+    throw new Error('useAdmin must be used within an AdminProvider');
   }
   return context;
 };

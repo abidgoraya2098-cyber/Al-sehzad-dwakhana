@@ -77,8 +77,8 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
           {/* Subtitle (High-Contrast Dark Gray) */}
           <p className="text-xs sm:text-base md:text-lg text-slate-800 leading-relaxed font-bold max-w-2xl mx-auto px-2">
             {t(
-              `${hakeemSettings.experienceYears} سالہ خاندانی تجربہ کار ${isUrdu ? hakeemSettings.nameUr : hakeemSettings.nameEn} کی زیرِ نگرانی خالص دیسی ادویات، معجون، عرقیات، حجامہ تھراپی اور آن لائن مفت طبی رہنمائی۔`,
-              `Over ${hakeemSettings.experienceYears} years of authentic clinical pulse diagnosis, customized herbal formulations, pure honey, Hijama therapy, and direct consultations under ${hakeemSettings.nameEn}.`
+              `${hakeemSettings?.experienceYears || '35+'} سالہ خاندانی تجربہ کار ${isUrdu ? (hakeemSettings?.nameUr || 'حکیم نواز احمد') : (hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad')} کی زیرِ نگرانی خالص دیسی ادویات، معجون، عرقیات، حجامہ تھراپی اور آن لائن مفت طبی رہنمائی۔`,
+              `Over ${hakeemSettings?.experienceYears || '35+'} years of authentic clinical pulse diagnosis, customized herbal formulations, pure honey, Hijama therapy, and direct consultations under ${hakeemSettings?.nameEn || 'Hakim Nawaz Ahmad'}.`
             )}
           </p>
 
@@ -167,7 +167,7 @@ export const HeroSection: React.FC<HeroSectionProps> = ({
             <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 text-emerald-900 flex items-center justify-center mb-1.5 sm:mb-2 font-black">
               <Award className="w-4 h-4 sm:w-5 sm:h-5" />
             </div>
-            <span className="font-black text-lg sm:text-xl text-emerald-950">{hakeemSettings.experienceYears} {t('سال', 'Years')}</span>
+            <span className="font-black text-lg sm:text-xl text-emerald-950">{hakeemSettings?.experienceYears || '35+'} {t('سال', 'Years')}</span>
             <span className="text-[11px] sm:text-xs text-slate-700 font-bold">{t('خاندانی حکمت و نباضی', 'Pulse & Unani Heritage')}</span>
           </div>
 

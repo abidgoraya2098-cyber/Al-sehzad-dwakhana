@@ -25,15 +25,18 @@ export const ClinicStatusBadge: React.FC<{ className?: string }> = ({ className 
       });
       setCurrentTimeText(timeString);
 
-      // Friday is closed (except online)
+      // Friday is closed (ناغہ بروز جمعۃ المبارک)
       if (day === 5) {
         setIsAutoOpen(false);
         return;
       }
 
-      // Timing: Morning (9:00 AM - 1:30 PM = 540 - 810) & Evening (4:30 PM - 10:30 PM = 990 - 1350)
-      const isMorningShift = currentMinutes >= 540 && currentMinutes <= 810;
-      const isEveningShift = currentMinutes >= 990 && currentMinutes <= 1350;
+      // Exact Visiting Card Timings:
+      // Morning Shift: 10:00 AM - 02:00 PM (600 - 840 mins)
+      // Break: 02:00 PM - 04:00 PM (840 - 960 mins)
+      // Evening Shift: 04:00 PM - 08:00 PM (960 - 1200 mins)
+      const isMorningShift = currentMinutes >= 600 && currentMinutes <= 840;
+      const isEveningShift = currentMinutes >= 960 && currentMinutes <= 1200;
 
       setIsAutoOpen(isMorningShift || isEveningShift);
     };
