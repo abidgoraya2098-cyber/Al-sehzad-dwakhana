@@ -52,7 +52,39 @@ export const defaultHakeemSettings: HakeemSettings = {
 };
 
 const SETTINGS_STORAGE_KEY = 'dawakhana_hakeem_settings_v7';
-const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v2';
+const PRODUCTS_STORAGE_KEY = 'dawakhana_products_inventory_v3';
+
+const mergeProductsWithDefaults = (
+  overrides?: Record<string, { price?: number; inStock?: boolean }>,
+  customProducts?: Product[]
+): Product[] => {
+  const mergedDefaults = productsData.map((prod) => {
+    const ov = overrides?.[prod.id];
+    if (ov) {
+      return {
+        ...prod,
+        price: typeof ov.price === 'number' ? ov.price : prod.price,
+        inStock: typeof ov.inStock === 'boolean' ? ov.inStock : prod.inStock,
+      };
+    }
+    return prod;
+  });
+
+  const validCustom = Array.isArray(customProducts) ? customProducts : [];
+  return [...mergedDefaults, ...validCustom];
+};
+
+const mergeSavedWithDefaults = (savedList: Product[]): Product[] => {
+  if (!Array.isArray(savedList) || savedList.length === 0) return productsData;
+  const savedMap = new Map(savedList.map((p) => [p.id, p]));
+  const mergedDefaults = productsData.map((dp) => {
+    const s = savedMap.get(dp.id);
+    return s ? { ...dp, ...s } : dp;
+  });
+  const defaultIds = new Set(productsData.map((dp) => dp.id));
+  const customList = savedList.filter((p) => !defaultIds.has(p.id));
+  return [...mergedDefaults, ...customList];
+};
 
 const AdminContext = createContext<AdminContextType | undefined>(undefined);
 
@@ -82,9 +114,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           return {
             ...defaultHakeemSettings,
             ...parsed,
-            nameUr: parsed.nameUr || defaultHakeemSettings.nameUr,
-            nameEn: parsed.nameEn || defaultHakeemSettings.nameEn,
-            avatarUrl: parsed.avatarUrl || '/hakeem-nawaz.jpg',
+            nameUr: parsed.nameUr || 'حکیم محمد نواز احمد',
+            nameEn: parsed.nameEn || 'Hakim Muhammad Nawaz Ahmad',
             phone: parsed.phone || '0300-6458169',
             whatsapp: parsed.whatsapp || '923006458169',
             email: parsed.email || 'nawaznaji012@gmail.com',
@@ -113,7 +144,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          return parsed;
+          return mergeSavedWithDefaults(parsed);
         }
       }
       return productsData;
@@ -143,12 +174,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         });
       }
 
-      // 2. Fetch live products
-      const cloudProducts = await fetchProductsFromCloud();
-      if (cloudProducts && Array.isArray(cloudProducts) && cloudProducts.length > 0) {
-        setProducts(cloudProducts);
+      // 2. Fetch live products / inventory overrides
+      const cloudInventory = await fetchProductsFromCloud();
+      if (cloudInventory && typeof cloudInventory === 'object') {
+        const merged = mergeProductsWithDefaults(cloudInventory.overrides, cloudInventory.customProducts);
+        setProducts(merged);
         try {
-          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(cloudProducts));
+          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(merged));
         } catch {}
       }
     } catch (e) {
